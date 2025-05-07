@@ -1,0 +1,24 @@
+/* 전체 레이아웃 */
+.farm-page           { padding: 2rem; font-family: Pretendard, sans-serif; }
+
+/* ── 상단 요약 카드 ─────────────────────────────── */
+.summary-wrap        { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+.summary-card        { flex: 1 0 160px; background:#fffbe6; border-radius:10px; padding:1rem 1.2rem; box-shadow:0 2px 6px rgba(0,0,0,.06); }
+.card-label          { font-size:.9rem; color:#555; margin:0 0 .4rem; }
+.card-value          { font-size:1.4rem; font-weight:700; margin:0; }
+
+/* ── 필터 바 ──────────────────────────────────────── */
+.filter-bar          { display:flex; gap:.75rem; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; }
+.filter-bar select   { padding:.5rem .8rem; border:1px solid #ccc; border-radius:6px; font-size:.95rem; }
+.btn-primary         { padding:.5rem 1.1rem; background:#4a69bd; color:#fff; border:none; border-radius:6px; cursor:pointer; }
+.btn-outline         { padding:.5rem 1.1rem; background:#fff;    color:#4a69bd; border:1px solid #4a69bd; border-radius:6px; cursor:pointer; }
+.btn-primary:hover   { background:#3b56a3; }
+.btn-outline:hover   { background:#f0f3ff; }
+
+/* ── 테이블 ──────────────────────────────────────── */
+.table-wrap          { overflow-x:auto; }
+table                { width:100%; border-collapse:collapse; min-width:720px; }
+th, td               { padding:.75rem 1rem; text-align:left; }
+thead th             { background:#f7f7f7; border-bottom:2px solid #e0e0e0; }
+tbody tr:nth-child(even) { background:#fafafa; }
+tbody tr:hover       { background:#fff1e1; }

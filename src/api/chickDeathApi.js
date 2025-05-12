@@ -1,6 +1,6 @@
 import API from './axiosInstance';
 
-//도태폐기 등록
+//폐사 등록
 export const createChickDeath = async (chickDeathDto) => {
   try {
     console.log('Request:', chickDeathDto);
@@ -16,7 +16,7 @@ export const createChickDeath = async (chickDeathDto) => {
   }
 };
 
-//도태폐기 수정
+//폐사 수정
 export const updateChickDeath = async (chickDeathNo, chickDeathDto) => {
   try {
     const { data } = await API.put(`/chickDeath/${chickDeathNo}`, chickDeathDto);
@@ -28,7 +28,7 @@ export const updateChickDeath = async (chickDeathNo, chickDeathDto) => {
 };
 
 
-//도태폐기 삭제
+//폐사 삭제
 export const deleteChickDeath = async (chickDeathNo) => {
   try {
 
@@ -44,7 +44,7 @@ export const deleteChickDeath = async (chickDeathNo) => {
   }
 };
 
-//도태폐기 조회
+//폐사 조회
 export const getChickDeath = async (chickDeathNo) => {
   try {
 
@@ -61,7 +61,7 @@ export const getChickDeath = async (chickDeathNo) => {
   }
 };
 
-//도태폐기 목록 조회
+//폐사 목록 조회
 export const getChickDeathByFarmSectionNo = async (farmSectionNo) => {
   try {
     console.log('Request:', farmSectionNo);
@@ -77,3 +77,31 @@ export const getChickDeathByFarmSectionNo = async (farmSectionNo) => {
   }
 };
 
+//모든 폐사 목록 조회(관리자)
+export const getAllChickDeath = async () => {
+  try {
+    const { data } = await API.get(`/chickDeath/list/all`);
+    console.log('Response:', data);
+
+    return data;
+    
+  } catch (err) {
+    console.error('getAllChickDeath error:', err);
+    throw err;
+  }
+};
+
+//농장동 폐사 수 누적합 조회
+export const getTotalChickDeathNumberByFarmSectionNo = async (farmSectionNo) => {
+  try {
+    const { data } = await API.get(`/chickDeath/list/total?farmSectionNo=${farmSectionNo}`);
+    console.log('Response:', data);
+
+    return data;
+
+  } catch (err) {
+    console.error('getTotalChickDeathNumberByFarmSectionNo error:', err);
+
+    throw err;
+  }
+};

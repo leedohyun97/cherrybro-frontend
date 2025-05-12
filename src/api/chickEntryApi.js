@@ -61,7 +61,7 @@ export const getChickEntry = async (chickEntryNo) => {
   }
 };
 
-//입추수수 목록 조회
+//농장동 번호로 입추수수 목록 조회(농장주)
 export const getChickEntriesByFarmSectionNo = async (farmSectionNo) => {
   try {
 
@@ -74,6 +74,37 @@ export const getChickEntriesByFarmSectionNo = async (farmSectionNo) => {
 
   } catch (err) {
     console.error('getChickEntriesByFarmSectionNo error:', err);
+
+    throw err;
+  }
+};
+
+//모든 입추수수 목록 조회(관리자)
+export const getAllChickEntries = async () => {
+  try {
+
+    const { data } = await API.get(`/chickEntry/list/all`);
+    console.log('Response:', data);
+
+    return data;
+
+  } catch (err) {
+    console.error('getChickEntriesByFarmSectionNo error:', err);
+
+    throw err;
+  }
+};
+
+//농장동 입추 수 누적합 조회
+export const getTotalChickEntryNumberByFarmSectionNo = async (farmSectionNo) => {
+  try {
+    const { data } = await API.get(`/chickEntry/list/total?farmSectionNo=${farmSectionNo}`);
+    console.log('Response:', data);
+
+    return data;
+
+  } catch (err) {
+    console.error('getTotalChickEntryNumberByFarmSectionNo error:', err);
 
     throw err;
   }

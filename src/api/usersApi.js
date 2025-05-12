@@ -49,7 +49,7 @@ export const getUsers = async (token) => {
 
     console.log('Request:', token);
 
-    const { data } = await API.get(`/users}`, {
+    const { data } = await API.get(`/users`, {
       headers: {
         Authorization: `Bearer ${token}`// 헤더에 토큰 추가
         }  

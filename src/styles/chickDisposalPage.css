@@ -1,4 +1,4 @@
-.death-layout {
+.disposal-layout {
   max-width: 900px;
   margin: 2rem auto;
   background: #fff;
@@ -7,14 +7,14 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.death-title {
+.disposal-title {
   font-size: 1.8rem;
   margin-bottom: 2rem;
   border-bottom: 2px solid #eee;
   padding-bottom: 1rem;
 }
 
-.death-form-grid {
+.disposal-form-grid {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;

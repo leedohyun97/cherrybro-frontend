@@ -1,5 +1,6 @@
 .sidebar {
     width: 200px;
+    min-width: 200px;
     background-color: #222;
     padding: 1rem;
     color: white;
@@ -20,6 +21,18 @@
   }
   
   .sidebar a:hover {
+    text-decoration: underline;
+  }
+  
+  .logout-link {
+    background: none;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 0;
+  }
+  .logout-link:hover {
     text-decoration: underline;
   }
   

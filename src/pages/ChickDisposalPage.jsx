@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/chickDeathPage.css';
+import '../styles/chickDisposalPage.css';
 import * as farmApi from "../api/farmApi";
 import * as farmSectionApi from "../api/farmSectionApi";
-import * as chickDeathApi from "../api/chickDeathApi";
+import * as chickDisposalApi from "../api/chickDisposalApi";
 import * as responseStatus from "../api/responseStatusCode";
 import { useUsersAuth } from "../util/authContext";
 import { useNavigate } from 'react-router-dom';
 
-export default function ChickDeathPage() {
+export default function ChickDisposalPage() {
     
   /*───── Context 가져오기 START ─────*/
     const { token, users } = useUsersAuth();// 사용자 인증 정보를 가져온다
@@ -28,15 +28,15 @@ export default function ChickDeathPage() {
   //농장동 데이터 선언
   const [farmSection, setFarmSection] = useState ([]);
 
-  //도태폐기 데이터 선언
-  const [chickDeath, setChickDeath] = useState({
-      chickDeathNumber : "",
-      chickDeathDate : "",
+  //도사 데이터 선언
+  const [chickDisposal, setChickDisposal] = useState({
+      chickDisposalNumber : "",
+      chickDisposalDate : "",
       farmSectionNo : ""
   })
 
-  const handleChangeChickDeath = (e) => {
-    setChickDeath({...chickDeath, [e.target.name]: e.target.value});
+  const handleChangeChickDisposal = (e) => {
+    setChickDisposal({...chickDisposal, [e.target.name]: e.target.value});
   }
 
   //로딩 상태
@@ -56,11 +56,11 @@ export default function ChickDeathPage() {
     setFarmSection(response.data);
   };
 
-  //도태폐기 등록
-  const createChickDeath = async (chickDeathDto) => {
-    const response = await chickDeathApi.createChickDeath(chickDeathDto);
+  //도사 등록
+  const createChickDisposal = async (chickDisposalDto) => {
+    const response = await chickDisposalApi.createChickDisposal(chickDisposalDto);
     switch(response.status) {
-      case responseStatus.CREATED_CHICK_DEATH_SUCCESS :
+      case responseStatus.CREATED_CHICK_DISPOSAL_SUCCESS :
         alert("성공적으로 입력되었습니다.");
         navigate("/farm-section"); // 등록 후 이동할 페이지
         break;
@@ -105,9 +105,9 @@ useEffect(() => {
 
 
   return (
-    <div className="death-layout">
-      <h2 className="death-title">폐사 수 등록</h2>
-      <form className="death-form-grid">
+    <div className="disposal-layout">
+      <h2 className="disposal-title">도사 수 등록</h2>
+      <form className="disposal-form-grid">
 
       <div className="form-row">
         <label>농장 이름</label>
@@ -126,46 +126,46 @@ useEffect(() => {
           <select
             id="farmSectionNo"
             name="farmSectionNo"
-            value={chickDeath.farmSectionNo}
-            onChange={handleChangeChickDeath}
+            value={chickDisposal.farmSectionNo}
+            onChange={handleChangeChickDisposal}
             >
             <option>-- 구역 선택 --</option>
             {farmSection.map((f) => {
               return <option key={f.farmSectionNo} value={f.farmSectionNo}>{f.farmSectionName}</option>;
             })}
           </select>
-            <p className="desc">해당 병아리가 폐기 된 구역을 선택하세요.</p>
+            <p className="desc">해당 병아리가 도사 된 구역을 선택하세요.</p>
           </div>
         </div>
 
         <div className="form-row">
-          <label>도태페기 날짜</label>
+          <label>도사 날짜</label>
           <div>
             <input 
             type="date"
-            id="chickDeathDate"
-            name="chickDeathDate"
-            onChange={handleChangeChickDeath} />
-            <p className="desc">병아리가 폐기 된 날짜입니다.</p>
+            id="chickDisposalDate"
+            name="chickDisposalDate"
+            onChange={handleChangeChickDisposal} />
+            <p className="desc">병아리가 도사 된 날짜입니다.</p>
           </div>
         </div>
 
         <div className="form-row">
-          <label>도태폐기 수</label>
+          <label>도사 수</label>
           <div>
             <input 
             type="number" 
-            id="chickDeathNumber"
-            name="chickDeathNumber"
-            onChange={handleChangeChickDeath}
+            id="chickDisposalNumber"
+            name="chickDisposalNumber"
+            onChange={handleChangeChickDisposal}
             placeholder="예: 10000" />
-            <p className="desc">폐기 된 병아리 수를 숫자로 입력하세요.</p>
+            <p className="desc">도사 된 병아리 수를 숫자로 입력하세요.</p>
           </div>
         </div>
 
         <div className="form-row button-row">
-        {/* createChickDeath버튼 */}
-        <button type="button" onClick={() => createChickDeath(chickDeath)}>등록하기</button>
+        {/* createChickDisposal버튼 */}
+        <button type="button" onClick={() => createChickDisposal(chickDisposal)}>등록하기</button>
         </div>
       </form>
     </div>

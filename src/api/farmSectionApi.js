@@ -63,7 +63,7 @@ export const getFarmSectionByFarmSectionNo = async (FarmSectionNo) => {
 export const getAllFarmSection = async () => {
   try {
 
-    const { data } = await API.get(`/farmSection`);
+    const { data } = await API.get(`/farmSection/list/all`);
 
     console.log('Response:', data);
     return data;

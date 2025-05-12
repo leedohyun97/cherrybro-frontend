@@ -19,6 +19,8 @@ export default function UsersRegisterPage() {
   });
   
   const [farmSections, setFarmSections] = useState(['1동']);
+  
+  const [sectionCount, setSectionCount] = useState(1);
 
   const [errors, setErrors] = useState({});
   
@@ -57,6 +59,21 @@ export default function UsersRegisterPage() {
       });
     }
   }
+
+  const handleSectionCountChange = (e) => {
+    const count = Math.max(1, parseInt(e.target.value, 10) || 1); //최소 1개 보장
+    setSectionCount(count);
+    setFarmSections(Array.from({ length: count }, (_, i) => `${i + 1}동`));
+
+    // 에러가 있을 경우 제거
+    if (errors.farmSections) {
+      setErrors(prevErrors => {
+        const newErrors = { ...prevErrors };
+        delete newErrors.farmSections;
+        return newErrors;
+      });
+    }
+  }  
   /* —————————— handleChagne 선언 end —————————— */
   
 
@@ -131,12 +148,7 @@ export default function UsersRegisterPage() {
   const addFarmSection = () => {
     setFarmSections([...farmSections, `${farmSections.length + 1}동`]);
   }
-  
-  const removeFarmSection = (index) => {
-    // 삭제하고 싶은 번호(index)만 빼고 새로운 배열로 만듬
-    const newSections = farmSections.filter((_, i) => i !== index);
-    setFarmSections(newSections);
-  }
+
   /* ———————————————————— 함수 선언 end ———————————————————— */
 
 
@@ -223,30 +235,15 @@ export default function UsersRegisterPage() {
           {errors.farmName && <p className="error-message">{errors.farmName}</p>}
 
 
-          <label>농장동 이름</label>
-          {farmSections.map((section, index) => (
-            <div key={index} className="farm-section-row">
-              <input
-                type="text"
-                name={`farmSections[${index}]`}
-                value={section}
-                onChange={(e) => handleSectionChange(index, e.target.value)}
-                placeholder={`${index + 1}동 이름`}
-                className={errors.farmSections ? "error-input" : ""}
-              />
-              {farmSections.length > 1 && (
-                <button
-                  type="button"
-                  className="remove-button"
-                  onClick={() => removeFarmSection(index)}
-                >
-                  삭제
-                </button>
-              )}
-            </div>
-          ))}
-          {errors.farmSections && <p className="error-message">{errors.farmSections}</p>}
-
+          <label>농장동 개수</label>
+          <input
+            type="number"
+            min="1"
+            value={sectionCount}
+            onChange={handleSectionCountChange}
+            placeholder="예: 3"
+            />
+            {errors.farmSections && <p className="error-message">{errors.farmSections}</p>}
           
           <button type="button" className="add-button" onClick={addFarmSection}>+ 농장동 추가</button>
 

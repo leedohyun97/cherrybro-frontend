@@ -84,3 +84,40 @@ input[type="date"] {
   margin-top: -10px;
   margin-bottom: 10px;
 }
+
+@media (max-width: 768px) {
+  .page-wrapper {
+    padding: 10px;
+  }
+
+  .form-vertical label {
+    font-size: 13px;
+  }
+
+  .form-vertical input,
+  .form-vertical select {
+    font-size: 13px;
+    padding: 10px;
+    margin-bottom: 12px;
+  }
+
+  input[type="date"] {
+    font-size: 13px;
+  }
+
+  .desc {
+    font-size: 11px;
+    margin-top: -8px;
+    margin-bottom: 8px;
+  }
+
+  .submit-button {
+    font-size: 15px;
+    padding: 10px;
+  }
+
+  .error-message {
+    font-size: 0.8em;
+  }
+}
+

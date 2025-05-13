@@ -105,3 +105,59 @@ tbody tr:nth-child(even) {
 tbody tr:hover {
   background: #fff1e1;
 }
+
+@media (max-width: 768px) {
+  .farm-page {
+    padding: 1rem;
+  }
+
+  /* 요약 카드 - 세로 정렬 */
+  .summary-wrap {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .summary-card {
+    flex: 1 0 auto;
+    font-size: 0.9rem;
+  }
+
+  .card-value {
+    font-size: 1.2rem;
+  }
+
+  /* 필터 바 - 세로 정렬 */
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
+  }
+
+  .filter-bar select {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .btn-primary,
+  .btn-outline {
+    width: 100%;
+    text-align: center;
+    font-size: 0.95rem;
+  }
+
+  /* 테이블 - 가로 스크롤 가능하게 */
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 600px; /* 너무 줄어들지 않게 최소 너비 확보 */
+  }
+
+  th,
+  td {
+    padding: 0.5rem 0.75rem;
+    font-size: 13px;
+  }
+}

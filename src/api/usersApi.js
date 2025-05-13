@@ -81,3 +81,22 @@ export const loginAction = async (sendJsonObject) => {
 
   return response.data;
 };
+
+//사용자 아이디 중복 조회
+export const checkUserIdDuplicate = async (usersId) => {
+  try {
+
+    console.log('Request:', usersId);
+
+    const { data } = await API.get(`/users/check-id?usersId=${usersId}`);
+
+    console.log('Response:', data);
+
+    return data;
+
+  } catch (err) {
+
+    console.error('checkUserIdDuplicate error:', err);
+    throw err;  
+  }
+};

@@ -1,0 +1,86 @@
+/* 공통 페이지 배경 */
+.page-wrapper {
+  padding: 20px;
+  min-height: 100vh;
+}
+
+
+.form-vertical label {
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #666;
+  font-size: 14px;
+}
+
+
+/* 공통 input/select 디자인 */
+.form-vertical input,
+.form-vertical select {
+  width: 100%;
+  padding: 12px 12px;
+  margin-bottom: 15px;
+  border: none;
+  border-bottom: 1.5px solid #ccc;
+  border-radius: 0;
+  font-size: 14px;
+  color: #333;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+/* 포커스 시 테두리 강조 */
+.form-vertical input:focus,
+.form-vertical select:focus {
+  border-bottom: 2px solid #444;
+  outline: none;
+}
+
+/* placeholder 스타일 */
+.form-vertical input::placeholder,
+.form-vertical select::placeholder {
+  color: #aaa;
+}
+
+/* 날짜 입력 전용 */
+input[type="date"] {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  color: #333;
+}
+
+/* 설명 텍스트 */
+.desc {
+  font-size: 12px;
+  color: #888;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+/* 버튼 */
+.submit-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.submit-button:hover {
+  background-color: #222;
+}
+
+/* 에러 스타일 */
+.input-error {
+  border-bottom: 2px solid red !important;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.85em;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}

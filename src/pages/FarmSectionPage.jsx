@@ -268,7 +268,7 @@ export default function FarmSectionPage() {
           { label: '입추 수', value: totalEntry.toLocaleString() },
           { label: '누적 도사', value: totalDisposal.toLocaleString() },
           { label: '누적 폐사', value: totalDeath.toLocaleString() },
-          { label: '현재 마릿수', value: totalLive.toLocaleString() },
+          { label: '사육수수', value: totalLive.toLocaleString() },
         ].map(c => (
           <div key={c.label} className="summary-card">
             <p className="card-label">{c.label}</p>
@@ -286,10 +286,10 @@ export default function FarmSectionPage() {
               <th>동</th>
               <th>최근 입추일</th>
               <th>일령</th>
-              <th>사육수수</th>
+              <th>입추수수</th>
               <th>누적 도사</th>
               <th>누적 폐사</th>
-              <th>현재 마릿수</th>
+              <th>사육수수</th>
               <th>폐사율</th>
             </tr>
           </thead>

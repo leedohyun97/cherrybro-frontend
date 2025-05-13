@@ -6,6 +6,7 @@ import * as chickEntryApi from "../api/chickEntryApi";
 import * as responseStatus from "../api/responseStatusCode";
 import { useUsersAuth } from "../util/authContext";
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function ChickEntryPage() {
 
@@ -75,11 +76,11 @@ export default function ChickEntryPage() {
     const response = await chickEntryApi.createChickEntry(chickEntryDto);
     switch(response.status) {
       case responseStatus.CREATED_CHICK_ENTRY_SUCCESS :
-        alert("성공적으로 입력되었습니다.");
+        toast.success("성공적으로 입력되었습니다.");
         navigate("/admin-farm-section"); // 등록 후 이동할 페이지
         break;
       default :
-        alert("오류가 발생하였습니다.");
+         toast.error("오류가 발생하였습니다.");
         break;
       }
     };

@@ -11,6 +11,8 @@ import AdminFarmSectionPage from './pages/AdminFarmSectionPage';
 import MainLayout from './layouts/MainLayout';
 import PublicLayout from './layouts/PublicLayout';
 import { AuthProvider } from './util/authContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import './App.css';
 
@@ -18,6 +20,14 @@ export default function App() {
   return (
   <AuthProvider>
     <Router>
+            <ToastContainer 
+      position="top-center"
+      autoClose={3000}
+      hideProgressBar={false}
+      closeOnClick
+      pauseOnHover
+      draggable
+    />
       <Routes>
         {/* ---------- PublicLayout : 헤더/사이드바 없음 ---------- */}
         <Route element={<PublicLayout />}>

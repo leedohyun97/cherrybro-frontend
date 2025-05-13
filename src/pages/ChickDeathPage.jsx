@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/chickDeathPage.css';
+import '../styles/chickPage.css';
 import * as farmApi from "../api/farmApi";
 import * as farmSectionApi from "../api/farmSectionApi";
 import * as chickDeathApi from "../api/chickDeathApi";
@@ -58,17 +58,23 @@ export default function ChickDeathPage() {
 
   //도태폐기 등록
   const createChickDeath = async (chickDeathDto) => {
-    const response = await chickDeathApi.createChickDeath(chickDeathDto);
-    switch(response.status) {
-      case responseStatus.CREATED_CHICK_DEATH_SUCCESS :
-        alert("성공적으로 입력되었습니다.");
-        navigate("/farm-section"); // 등록 후 이동할 페이지
-        break;
-      default :
-        alert("오류가 발생하였습니다.");
-        break;
-      }
-    };
+    try {
+      const response = await chickDeathApi.createChickDeath(chickDeathDto);
+      switch(response.status) {
+        case responseStatus.CREATED_CHICK_DEATH_SUCCESS :
+          alert("성공적으로 입력되었습니다.");
+          navigate("/farm-section"); // 등록 후 이동할 페이지
+          break;
+        default :
+          alert("오류가 발생하였습니다.");
+          break;
+        }
+    } catch (error) {
+      console.error("Error creating chick death:", error);
+      alert("오류가 발생하였습니다.");
+      navigate("/farm-section"); // 등록 후 이동할 페이지
+    }
+  }
   
   //
 useEffect(() => {
@@ -105,69 +111,58 @@ useEffect(() => {
 
 
   return (
-    <div className="death-layout">
-      <h2 className="death-title">폐사 수 등록</h2>
-      <form className="death-form-grid">
+    <div className="page-wrapper">
+      <div className="form-container">
+        <h2 className="form-title">폐사 수 등록</h2>
+        <form className="form-vertical">
 
-      <div className="form-row">
-        <label>농장 이름</label>
-        <div>
-          <input 
-            type="text" 
-            value={farm.farmName} //farmName을 값으로 설정
-            readOnly // 수정할 수 없게 설정
-          />
-        </div>
-      </div>
-        
-        <div className="form-row">
+          <label>농장 이름</label>
+          <input type="text" value={farm.farmName} readOnly />
+
           <label>농장 구역</label>
-          <div>
           <select
             id="farmSectionNo"
             name="farmSectionNo"
             value={chickDeath.farmSectionNo}
             onChange={handleChangeChickDeath}
-            >
-            <option>-- 구역 선택 --</option>
-            {farmSection.map((f) => {
-              return <option key={f.farmSectionNo} value={f.farmSectionNo}>{f.farmSectionName}</option>;
-            })}
+          >
+            <option>구역 선택</option>
+            {farmSection.map((f) => (
+              <option key={f.farmSectionNo} value={f.farmSectionNo}>
+                {f.farmSectionName}
+              </option>
+            ))}
           </select>
-            <p className="desc">해당 병아리가 폐기 된 구역을 선택하세요.</p>
-          </div>
-        </div>
+          <p className="desc">해당 병아리가 폐사 된 구역을 선택하세요.</p>
 
-        <div className="form-row">
-          <label>도태페기 날짜</label>
-          <div>
-            <input 
+          <label>폐사 날짜</label>
+          <input
             type="date"
             id="chickDeathDate"
             name="chickDeathDate"
-            onChange={handleChangeChickDeath} />
-            <p className="desc">병아리가 폐기 된 날짜입니다.</p>
-          </div>
-        </div>
+            onChange={handleChangeChickDeath}
+          />
+          <p className="desc">병아리가 폐기 된 날짜입니다.</p>
 
-        <div className="form-row">
-          <label>도태폐기 수</label>
-          <div>
-            <input 
-            type="number" 
+          <label>폐사 수</label>
+          <input
+            type="number"
             id="chickDeathNumber"
             name="chickDeathNumber"
             onChange={handleChangeChickDeath}
-            placeholder="예: 10000" />
-            <p className="desc">폐기 된 병아리 수를 숫자로 입력하세요.</p>
-          </div>
-        </div>
+            placeholder="예: 10000"
+          />
+          <p className="desc">폐기 된 병아리 수를 숫자로 입력하세요.</p>
 
-        <div className="form-row button-row">
-        {/* createChickDeath버튼 */}
-        <button type="button" onClick={() => createChickDeath(chickDeath)}>등록하기</button>
-        </div>
-      </form>
+          <button
+            type="button"
+            className="submit-button"
+            onClick={() => createChickDeath(chickDeath)}
+          >
+            등록하기
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

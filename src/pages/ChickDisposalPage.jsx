@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/chickDisposalPage.css';
+import '../styles/chickPage.css';
 import * as farmApi from "../api/farmApi";
 import * as farmSectionApi from "../api/farmSectionApi";
 import * as chickDisposalApi from "../api/chickDisposalApi";
@@ -105,69 +105,65 @@ useEffect(() => {
 
 
   return (
-    <div className="disposal-layout">
-      <h2 className="disposal-title">도사 수 등록</h2>
-      <form className="disposal-form-grid">
-
-      <div className="form-row">
-        <label>농장 이름</label>
-        <div>
-          <input 
-            type="text" 
-            value={farm.farmName} //farmName을 값으로 설정
-            readOnly // 수정할 수 없게 설정
-          />
-        </div>
-      </div>
-        
-        <div className="form-row">
+    <div className="page-wrapper">
+      <div className="form-container">
+        <h2 className="form-title">도사 수 등록</h2>
+        <form className="form-vertical">
+          
+          <div className="form-row-horizontal">
+          <label>농장 이름</label>
+          <input type="text" value={farm.farmName} readOnly />
+          </div>
+          
+          <div className="form-row-horizontal">
           <label>농장 구역</label>
-          <div>
           <select
-            id="farmSectionNo"
             name="farmSectionNo"
             value={chickDisposal.farmSectionNo}
             onChange={handleChangeChickDisposal}
-            >
-            <option>-- 구역 선택 --</option>
-            {farmSection.map((f) => {
-              return <option key={f.farmSectionNo} value={f.farmSectionNo}>{f.farmSectionName}</option>;
-            })}
+          >
+            <option>구역 선택</option>
+            {farmSection.map(f => (
+              <option key={f.farmSectionNo} value={f.farmSectionNo}>
+                {f.farmSectionName}
+              </option>
+            ))}
           </select>
-            <p className="desc">해당 병아리가 도사 된 구역을 선택하세요.</p>
           </div>
-        </div>
+          <p className="desc">해당 병아리가 도사된 구역을 선택하세요.</p>
 
-        <div className="form-row">
+
+          <div className="form-row-horizontal">
           <label>도사 날짜</label>
-          <div>
-            <input 
+          <input
             type="date"
-            id="chickDisposalDate"
             name="chickDisposalDate"
-            onChange={handleChangeChickDisposal} />
-            <p className="desc">병아리가 도사 된 날짜입니다.</p>
+            onChange={handleChangeChickDisposal}
+          />
           </div>
-        </div>
+          <p className="desc">병아리가 도사된 날짜입니다.</p>
+          
 
-        <div className="form-row">
+          <div className="form-row-horizontal">
           <label>도사 수</label>
-          <div>
-            <input 
-            type="number" 
-            id="chickDisposalNumber"
+          <input
+            type="number"
             name="chickDisposalNumber"
             onChange={handleChangeChickDisposal}
-            placeholder="예: 10000" />
-            <p className="desc">도사 된 병아리 수를 숫자로 입력하세요.</p>
+            placeholder="예: 10000"
+          />
           </div>
-        </div>
-
-        <div className="form-row button-row">
-        {/* createChickDisposal버튼 */}
-        <button type="button" onClick={() => createChickDisposal(chickDisposal)}>등록하기</button>
-        </div>
-      </form>
+          <p className="desc">도사된 병아리 수를 숫자로 입력하세요.</p>
+          
+          <button
+            type="button"
+            className="submit-button"
+            onClick={() => createChickDisposal(chickDisposal)}
+          >
+            등록하기
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

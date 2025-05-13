@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/chickEntryPage.css';
+import '../styles/chickPage.css';
 import * as farmApi from "../api/farmApi";
 import * as farmSectionApi from "../api/farmSectionApi";
 import * as chickEntryApi from "../api/chickEntryApi";
@@ -108,84 +108,79 @@ export default function ChickEntryPage() {
 
 
   return (
-    <div className="entry-layout">
-      <h2 className="entry-title">입추수 등록</h2>
-      <form className="entry-form-grid">
+    <div className="page-wrapper">
+  <div className="form-container">
+    <h2 className="form-title">입추수 등록</h2>
+    <form className="form-vertical">
 
-    <div className="form-row">
-    <label>농장 선택</label>
-      <div>
-        <select
-          id="farmNo"
-          name="farmNo"
-          value={selectedFarmNo}
-          onChange={handleChangeFarm}
-        >
-          <option value="">-- 농장 선택 --</option>
-          {farm.map(f => (
-            <option key={f.farmNo} value={f.farmNo}>
-              {f.farmName}
-            </option>
-          ))}
-        </select>
-        <p className="desc">병아리가 속한 농장을 선택하세요.</p>
-      </div>
-    </div>
-        
-        <div className="form-row">
-          <label>농장 구역</label>
-          <div>
-          <select
-            id="farmSectionNo"
-            name="farmSectionNo"
-            value={chickEntry.farmSectionNo}
-            onChange={handleChangeChickEntry}
-            >
-            <option>-- 구역 선택 --</option>
-            {farmSection.map((f) => {
-              return <option key={f.farmSectionNo} value={f.farmSectionNo}>{f.farmSectionName}</option>;
-            })}
-          </select>
-            <p className="desc">해당 병아리가 입추된 구역을 선택하세요.</p>
-          </div>
-        </div>
+      <label>농장 선택</label>
+      <select
+        id="farmNo"
+        name="farmNo"
+        value={selectedFarmNo}
+        onChange={handleChangeFarm}
+      >
+        <option value="">농장 선택</option>
+        {farm.map(f => (
+          <option key={f.farmNo} value={f.farmNo}>
+            {f.farmName}
+          </option>
+        ))}
+      </select>
+      <p className="desc">병아리가 속한 농장을 선택하세요.</p>
 
-        <div className="form-row">
-          <label>입추 날짜</label>
-          <div>
-            <input 
-            type="date"
-            id="chickEntryDate"
-            name="chickEntryDate"
-            value={chickEntry.chickEntryDate}
-            onChange={handleChangeChickEntry} />
-            <p className="desc">병아리가 입추된 날짜입니다.</p>
-          </div>
-        </div>
+      <label>농장 구역</label>
+      <select
+        id="farmSectionNo"
+        name="farmSectionNo"
+        value={chickEntry.farmSectionNo}
+        onChange={handleChangeChickEntry}
+      >
+        <option>-- 구역 선택 --</option>
+        {farmSection.map((f) => (
+          <option key={f.farmSectionNo} value={f.farmSectionNo}>
+            {f.farmSectionName}
+          </option>
+        ))}
+      </select>
+      <p className="desc">해당 병아리가 입추된 구역을 선택하세요.</p>
 
-        <div className="form-row">
-          <label>입추 수</label>
-          <div>
-            <input 
-            type="number" 
-            id="chickEntryNumber"
-            name="chickEntryNumber"
-            value={chickEntry.chickEntryNumber}
-            onChange={handleChangeChickEntry}
-            placeholder="예: 10000" />
-            <p className="desc">입추된 병아리 수를 숫자로 입력하세요.</p>
-          </div>
-        </div>
+      <label>입추 날짜</label>
+      <input
+        type="date"
+        id="chickEntryDate"
+        name="chickEntryDate"
+        value={chickEntry.chickEntryDate}
+        onChange={handleChangeChickEntry}
+      />
+      <p className="desc">병아리가 입추된 날짜입니다.</p>
 
-        <div className="form-row button-row">
-        {/* createChickEntry버튼 */}
-        <button type="button"
-                disabled={!chickEntry.farmSectionNo ||
-                          !chickEntry.chickEntryDate ||
-                          !chickEntry.chickEntryNumber}
-                onClick={() => createChickEntry(chickEntry)}>등록하기</button>
-        </div>
-      </form>
-    </div>
+      <label>입추 수</label>
+      <input
+        type="number"
+        id="chickEntryNumber"
+        name="chickEntryNumber"
+        value={chickEntry.chickEntryNumber}
+        onChange={handleChangeChickEntry}
+        placeholder="예: 10000"
+      />
+      <p className="desc">입추된 병아리 수를 숫자로 입력하세요.</p>
+
+      <button
+        type="button"
+        className="submit-button"
+        disabled={
+          !chickEntry.farmSectionNo ||
+          !chickEntry.chickEntryDate ||
+          !chickEntry.chickEntryNumber
+        }
+        onClick={() => createChickEntry(chickEntry)}
+      >
+        등록하기
+      </button>
+    </form>
+  </div>
+</div>
+
   );
 }

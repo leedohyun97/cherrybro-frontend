@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import '../styles/usersRegisterPage.css';
 import { Link, useNavigate } from 'react-router-dom';
 import * as usersApi from "../api/usersApi";
 import * as responseStatus from "../api/responseStatusCode";
 import logo from "../images/체리부로.jpg"
+import { toast } from 'react-toastify';
 
 export default function UsersRegisterPage() {
   const navigate = useNavigate();
+  /* ————— useRef 선언(포커싱 용도) start ————— */
+  const usersIdRef = useRef();
+  const usersPasswordRef = useRef();
+  const usersNameRef = useRef();
+  const usersEmailRef = useRef();
+  const usersPhoneRef = useRef();
+  const farmNameRef = useRef();
+  /* ————— useRef 선언(포커싱 용도) end ————— */
 
   /* ————— useState 선언 start ————— */
   const [users, setUsers] = useState({
@@ -25,6 +34,11 @@ export default function UsersRegisterPage() {
   const [errors, setErrors] = useState({});
   
   const [shake, setShake] = useState(false);
+  
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+  const phoneRegex = /^[0-9]{10,11}$/;
+
   /* ————— useState 선언 end ————— */
   
 
@@ -79,6 +93,22 @@ export default function UsersRegisterPage() {
 
 
   /* ———————————————————— 함수 선언 start ———————————————————— */
+  const focusField = (fieldName) => {
+    const refMap = {
+    usersId: usersIdRef,
+    usersPassword: usersPasswordRef,
+    usersName: usersNameRef,
+    usersEmail: usersEmailRef,
+    usersPhone: usersPhoneRef,
+    farmName: farmNameRef
+    };
+
+    const targetRef = refMap[fieldName];
+    if (targetRef && targetRef.current) {
+      targetRef.current.focus();
+    }
+  }
+  
   const joinAction = async (e) => {
     e.preventDefault();
 
@@ -87,33 +117,40 @@ export default function UsersRegisterPage() {
 
     if (!users.usersId || users.usersId.length < 4) {
       newErrors.usersId = "아이디는 최소 4자 이상이어야 합니다.";
-    }
+      focusField("usersId");
 
-    if (!users.usersPassword || users.usersPassword.length < 6) {
+    } else if (!users.usersPassword || users.usersPassword.length < 6) {
       newErrors.usersPassword = "비밀번호는 최소 6자 이상이어야 합니다.";
-    }
+      focusField("usersPassword");
 
-    if (!users.usersName) {
+    } else if (!users.usersName) {
       newErrors.usersName = "이름을 입력하세요.";
-    }
+      focusField("usersName");
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(users.usersEmail)) {
+    } else if (!emailRegex.test(users.usersEmail)) {
       newErrors.usersEmail = "유효한 이메일을 입력하세요.";
-    }
+      focusField("usersEmail");
 
-    const phoneRegex = /^[0-9]{10,11}$/;
-    if (!phoneRegex.test(users.usersPhone)) {
+    } else if (!phoneRegex.test(users.usersPhone)) {
       newErrors.usersPhone = "전화번호는 숫자만 입력하며 10~11자리여야 합니다.";
-    }
+      focusField("usersPhone");
 
-    if (!users.farmName) {
+    } else if (!users.farmName) {
       newErrors.farmName = "농장 이름을 입력하세요.";
+      focusField("farmName");
+
+    } else if (farmSections.length === 0 || farmSections.some(section => !section.trim())) {
+      newErrors.farmSections = "농장동 이름을 모두 입력하세요.";
+      focusField("farmSections");
     }
 
-    if (farmSections.length === 0 || farmSections.some(section => !section.trim())) {
-      newErrors.farmSections = "농장동 이름을 모두 입력하세요.";
-    }
+    const userDuplicateCheck = await usersApi.checkUserIdDuplicate(users.usersId);
+    if (userDuplicateCheck.data === true) {
+      newErrors.usersId = "이미 사용중인 아이디입니다.";
+      if (usersIdRef.current) {
+        usersIdRef.current.focus();
+      }
+    };
 
     // 에러가 있으면 상태에 저장하고 return
     if (Object.keys(newErrors).length > 0) {
@@ -124,7 +161,7 @@ export default function UsersRegisterPage() {
     // 에러 없으면 초기화
     setErrors({});
     /*—————— 입력값 검사 end —————*/
-
+    
     const saveUser = {
       ...users, farmSections : farmSections
     };
@@ -138,9 +175,11 @@ export default function UsersRegisterPage() {
     switch(responseJsonObject.status) {
       case responseStatus.CREATED_USER_SUCCESS:
         navigate("/login");
+        toast.success("회원가입이 완료되었습니다.");
         break;
       default:
-        alert("오류가 발생하였습니다.");
+        toast.error("회원가입에 실패하였습니다. 다시 시도해주세요.");
+        navigate("/register");
         break;
     }
   }
@@ -171,6 +210,7 @@ export default function UsersRegisterPage() {
             onChange={handleUsersChange}
             placeholder="아이디를 입력하세요"
             className={errors.usersId ? "error-input" : ""}
+            ref={usersIdRef}
           />
           {errors.usersId && <p className="error-message">{errors.usersId}</p>}
 
@@ -244,10 +284,9 @@ export default function UsersRegisterPage() {
             placeholder="예: 3"
             />
             {errors.farmSections && <p className="error-message">{errors.farmSections}</p>}
-          
-          <button type="button" className="add-button" onClick={addFarmSection}>+ 농장동 추가</button>
 
           <button type="submit" className="join-button">회원가입</button>
+          
         </form>
       </div>
     </div>

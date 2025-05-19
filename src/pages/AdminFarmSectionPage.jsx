@@ -235,6 +235,7 @@ export default function AdminFarmSectionPage() {
       <section className="summary-wrap">
         {[ 
           { label: '입추 수', value: totalEntry.toLocaleString() },
+          { label: '누적 도사', value: totalDisposal.toLocaleString() },
           { label: '누적 폐사', value: totalDeath.toLocaleString() },
           { label: '현재 마릿수', value: totalLive.toLocaleString() },
         ].map(c => (

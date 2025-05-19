@@ -11,7 +11,6 @@ export default function MainLayout() {
 
   return (
     <div className="app-container">
-      <header className="app-header" onClick={handleHeaderClick}>CHERRYBRO</header>
       <div className="app-body">
         <Sidebar />
         <main className="app-main">

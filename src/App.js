@@ -4,8 +4,11 @@ import MainPage from './pages/MainPage';
 import UsersLoginPage from './pages/UsersLoginPage';
 import UsersRegisterPage from './pages/UsersRegisterPage';
 import ChickEntryPage from './pages/ChickEntryPage';
+import ChickEntryDetailPage from './pages/ChickEntryDetailPage';
 import ChickDeathPage from './pages/ChickDeathPage';
+import ChickDeathDetailPage from './pages/ChickDeathDetailPage';
 import ChickDisposalPage from './pages/ChickDisposalPage';
+import ChickDisposalDetailPage from './pages/ChickDisposalDetailPage';
 import FarmSectionPage from './pages/FarmSectionPage';
 import AdminFarmSectionPage from './pages/AdminFarmSectionPage';
 import MainLayout from './layouts/MainLayout';
@@ -13,7 +16,6 @@ import PublicLayout from './layouts/PublicLayout';
 import { AuthProvider } from './util/authContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 import './App.css';
 
 export default function App() {
@@ -39,11 +41,16 @@ export default function App() {
           <Route element={<MainLayout />}>
             <Route path="/" element={<MainPage />} />
             <Route path="/main" element={<MainPage />} />
-            <Route path="/chick-entry" element={<ChickEntryPage />} />
-            <Route path="/chick-death" element={<ChickDeathPage />} />
-            <Route path="/chick-disposal" element={<ChickDisposalPage />} />
             <Route path="/farm-section" element={<FarmSectionPage />} />
             <Route path="/admin-farm-section" element={<AdminFarmSectionPage />} />
+            <Route path="/chick-entry" element={<ChickEntryPage />} />
+            <Route path="/chick-entry/detail" element={<ChickEntryDetailPage />} />
+
+            <Route path="/chick-death" element={<ChickDeathPage />} />
+            <Route path="/chick-death/detail" element={<ChickDeathDetailPage />} />
+
+            <Route path="/chick-disposal" element={<ChickDisposalPage />} />
+            <Route path="/chick-disposal/detail" element={<ChickDisposalDetailPage />} />
           </Route>
       </Routes>
     </Router>

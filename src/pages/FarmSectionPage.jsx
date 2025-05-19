@@ -262,8 +262,8 @@ export default function FarmSectionPage() {
 
   return (
     <div className="farm-page">
-      {/* ─── 상단 카드 3개 ─────────────────── */}
-      <section className="summary-wrap">
+      {/* 데스크탑 카드 리스트 */}
+      <section className="summary-wrap desktop-only">
         {[ 
           { label: '입추 수', value: totalEntry.toLocaleString() },
           { label: '누적 도사', value: totalDisposal.toLocaleString() },
@@ -275,6 +275,26 @@ export default function FarmSectionPage() {
             <p className="card-value">{c.value}</p>
           </div>
         ))}
+      </section>
+
+      {/* 모바일 카드 리스트 */}
+      <section className="card-list mobile-only">
+        <div className="card-item">
+          <span className="card-label">입추 수</span>
+          <span className="card-value">{totalEntry.toLocaleString()}</span>
+        </div>
+        <div className="card-item">
+          <span className="card-label">누적 도사</span>
+          <span className="card-value">{totalDisposal.toLocaleString()}</span>
+        </div>
+        <div className="card-item">
+          <span className="card-label">누적 폐사</span>
+          <span className="card-value">{totalDeath.toLocaleString()}</span>
+        </div>
+        <div className="card-item">
+          <span className="card-label">사육수수</span>
+          <span className="card-value">{totalLive.toLocaleString()}</span>
+        </div>
       </section>
 
       {/* ─── 테이블 ────────────────────────── */}

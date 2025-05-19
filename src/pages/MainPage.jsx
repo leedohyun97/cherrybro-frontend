@@ -1,12 +1,9 @@
 import React from 'react';
+import 한국원종 from '../images/한국원종_1024x700.jpg';
 
 const MainPage = () => {
     return (
-        <div style={styles.container}>
-            <h1 style={styles.title}>Welcome to CherryBro!</h1>
-            <p style={styles.description}>
-            </p>
-        </div>
+        <img src={한국원종} alt="Main" style={{ width: '100%', height: 'auto', maxWidth: '800px', borderRadius: '10px' }} />
     );
 };
 

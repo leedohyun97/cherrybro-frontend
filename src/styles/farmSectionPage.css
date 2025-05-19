@@ -5,6 +5,14 @@
 }
 
 /* ── 상단 요약 카드 ─────────────────────────────── */
+
+/* 데스크탑만 보이게 */
+.desktop-only {
+  display: block;
+}
+.mobile-only {
+  display: none;
+}
 .summary-wrap {
   display: flex;
   gap: 1rem;
@@ -14,7 +22,7 @@
 
 .summary-card {
   flex: 1 0 160px;
-  background: #fffbe6;
+  background: #f2f8ff;
   border-radius: 10px;
   padding: 1rem 1.2rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
@@ -109,24 +117,46 @@ tbody tr:hover {
 @media (max-width: 768px) {
   .farm-page {
     padding: 1rem;
+    margin-top: 3rem;
   }
 
-  /* 요약 카드 - 세로 정렬 */
-  .summary-wrap {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
   }
 
-  .summary-card {
-    flex: 1 0 auto;
-    font-size: 0.9rem;
+  .card-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-radius: 10px;
+    color: #222;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  }
+
+  .card-icon {
+    font-size: 1.4rem;
+  }
+
+  .card-label {
+    flex: 1;
+    margin-left: 10px;
+    font-size: 0.95rem;
   }
 
   .card-value {
-    font-size: 1.2rem;
+    font-weight: bold;
+    font-size: 1rem;
   }
 
-  /* 필터 바 - 세로 정렬 */
+  /* ✅ 이 아래 부분은 전부 media 안으로 이동해야 함 */
   .filter-bar {
     flex-direction: column;
     align-items: stretch;
@@ -145,18 +175,17 @@ tbody tr:hover {
     font-size: 0.95rem;
   }
 
-  /* 테이블 - 가로 스크롤 가능하게 */
   .table-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
 
   table {
-    min-width: 600px; /* 너무 줄어들지 않게 최소 너비 확보 */
+    width : 100%;
+    min-width: 600px;
   }
 
-  th,
-  td {
+  th, td {
     padding: 0.5rem 0.75rem;
     font-size: 13px;
   }

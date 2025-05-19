@@ -4,14 +4,6 @@
   height: 100vh;
 }
 
-.app-header {
-  background-color: #333;
-  color: white;
-  padding: 1rem;
-  font-size: 1.5rem;
-  text-align: center;
-}
-
 .app-body {
   display: flex;
   flex: 1;

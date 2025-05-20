@@ -16,9 +16,13 @@ export const createUsers = async (UsersJoinDto) => {
 };
 
 // 사용자 수정
-export const updateUsers = async (UsersNo, UsersDto) => {
+export const updateUsers = async (token, UsersDto, ) => {
   try {
-    const { data } = await API.put(`/users/${UsersNo}`, UsersDto);
+    const { data } = await API.put(`/users`, UsersDto, {
+      headers: {
+        Authorization: `Bearer ${token}`// 헤더에 토큰 추가
+        }  
+      });
     return data;
   } catch (err) {
     console.error('updateUsers error:', err);
@@ -82,13 +86,31 @@ export const loginAction = async (sendJsonObject) => {
   return response.data;
 };
 
+
 //사용자 아이디 중복 조회
 export const checkUserIdDuplicate = async (usersId) => {
   try {
-
+    
     console.log('Request:', usersId);
-
+    
     const { data } = await API.get(`/users/check-id?usersId=${usersId}`);
+
+    console.log('Response:', data);
+    
+    return data;
+    
+  } catch (err) {
+    
+    console.error('checkUserIdDuplicate error:', err);
+    throw err;  
+  }
+};
+
+//사용자 아이디 찾기
+export const findUserIdByUsersNameAndUsersEmail = async (usersName, usersEmail) => {
+  try {
+
+    const { data } = await API.get(`/users/find-id?usersName=${usersName}&usersEmail=${usersEmail}`);
 
     console.log('Response:', data);
 
@@ -96,7 +118,25 @@ export const checkUserIdDuplicate = async (usersId) => {
 
   } catch (err) {
 
-    console.error('checkUserIdDuplicate error:', err);
+    console.error('findUserIdByUsersNameAndUsersEmail error:', err);
+    throw err;  
+  }
+};
+
+//사용자 비밀번호 찾기
+export const findUserPasswordByUsersIdAndUsersEmail = async (findPasswordDto) => {
+  try {
+
+    const { data } = await API.post(`/users/find-password`, findPasswordDto);
+
+    console.log('Response:', data);
+
+    return data;
+
+  } catch (err) {
+
+    console.error('findUserPasswordByUsersIdAndUsersEmail error:', err);
+
     throw err;  
   }
 };

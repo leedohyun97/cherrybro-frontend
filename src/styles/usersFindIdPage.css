@@ -1,0 +1,92 @@
+/* 전체 페이지 배경 */
+.find-id-page {
+  min-height: 100vh;
+  background-color: #f6f6f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+}
+
+/* 박스 스타일 */
+.find-id-page form {
+  background-color: white;
+  padding: 40px;
+  width: 400px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* 제목 */
+.find-id-page h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* 폼 그룹 */
+.find-id-page .form-group {
+  margin-bottom: 20px;
+}
+
+/* 라벨 */
+.find-id-page label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* 인풋 필드 */
+.find-id-page input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* 버튼 */
+.find-id-page button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background-color: #2e6ff2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.find-id-page button[type="submit"]:hover {
+  background-color: #1c4dd8;
+}
+
+/* 결과 메시지 */
+.find-id-page .result-message {
+  margin-top: 20px;
+  text-align: center;
+  color: #2e6ff2;
+  font-weight: 500;
+}
+
+/* 하단 링크 영역 */
+.find-id-page .link-area {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.find-id-page .link-area a {
+  color: #555;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.find-id-page .link-area a:hover {
+  text-decoration: underline;
+}

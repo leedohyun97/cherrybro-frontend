@@ -130,13 +130,12 @@ export default function UsersLoginPage() {
             )}
 
           <div className="login-links">
-            <a href="#">아이디 찾기</a>
+            <Link to="/find-id">아이디 찾기</Link>
             <span>|</span>
-            <a href="#">비밀번호 찾기</a>
+            <Link to="/find-password">비밀번호 찾기</Link>
             <span>|</span>
-            <a href="/register">회원가입</a>
+            <Link to="/register">회원가입</Link>
           </div>
-
 
           <button type="submit" className="login-button">
             로그인

@@ -41,11 +41,11 @@ export default function ChickDeathDetailPage() {
       if (!usersNo) return; // usersNo가 아직 준비 안 됐으면 실행 안 함
         const fetchAllData = async () => { 
           try {
-                const getFarmByUsersNo = await farmApi.getFarmByUsersNo(usersNo); // 사용자 번호로 농장 정보 조회
-                const getFarmByUsersNoData = getFarmByUsersNo.data; // 농장 정보
-                setFarm(getFarmByUsersNoData); // 농장 정보를 상태에 저장
+                const getMyFarm = await farmApi.getMyFarm(token); // 토큰으로 농장 정보 조회
+                const getMyFarmData = getMyFarm.data; // 농장 정보
+                setFarm(getMyFarmData); // 농장 정보를 상태에 저장
 
-                const getAllFarmSectionByFarmNo = await farmSectionApi.getAllFarmSectionByFarmNo(getFarmByUsersNoData.farmNo); // 농장 번호로 농장 구역 정보 조회
+                const getAllFarmSectionByFarmNo = await farmSectionApi.getAllFarmSectionByFarmNo(getMyFarmData.farmNo); // 농장 번호로 농장 구역 정보 조회
                 const getAllFarmSectionByFarmNoData = getAllFarmSectionByFarmNo.data; // 농장 구역 정보
                 setFarmSections(getAllFarmSectionByFarmNoData); // 농장 구역 정보를 상태에 저장
                 console.log("getAllFarmSectionByFarmNoData", getAllFarmSectionByFarmNoData);
@@ -62,7 +62,7 @@ export default function ChickDeathDetailPage() {
                 const chickDeathSort = chickDeathFlattened.sort((a, b) => new Date(b.chickDeathCreateAt) - new Date(a.chickDeathCreateAt)); // 병아리 입추 정보를 등록 날짜 기준으로 내림차순 정렬
                 console.log("chickDeathSort", chickDeathSort);
                 
-                setChickDeaths(chickDeathSort); // 병아리 입고 정보를 상태에 저장
+                setChickDeaths(chickDeathSort); // 병아리 폐사 정보를 상태에 저장
                 
             } catch (error) {
                 console.error("Error fetching data:", error); // 에러를 콘솔에 출력한다

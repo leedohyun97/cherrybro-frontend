@@ -44,10 +44,10 @@ export default function ChickDeathPage() {
   
   /* ───────────────────── 함수 선언 ───────────────────── */
   //농장 번호로 농장 가져오기
-  const getFarmByUsersNo = async (usersNo) => {
-    const response = await farmApi.getFarmByUsersNo(usersNo);
+  const getMyFarm = async (token) => {
+    const response = await farmApi.getMyFarm(token);
     setFarm(response.data);
-    console.log("getFarmByUsersNo", response);
+    console.log("getMyFarm", response);
   };
 
   //농장 번호로 농장동 가져오기
@@ -86,7 +86,7 @@ useEffect(() => {
     try {
       setLoading(true);
       
-      const farmResponse = await farmApi.getFarmByUsersNo(usersNo);
+      const farmResponse = await farmApi.getMyFarm(token);
       setFarm(farmResponse.data);
 
       const farmNo = farmResponse.data.farmNo;
@@ -102,11 +102,9 @@ useEffect(() => {
     }
   }
 
-  if(token) {
-    fetchData();
-  }
+  fetchData();
 
-}, [token, usersNo]);
+}, [token]);
   
 
 

@@ -60,7 +60,7 @@ export default function ChickEntryPage() {
   /* ───────────────────── 함수 선언 ───────────────────── */
   //사용자 번호로 농장 가져오기
   const getAllFarm = async () => {
-    const response = await farmApi.getAllFarm();
+    const response = await farmApi.getAllFarm(token);
     setFarm(response.data);
     console.log("getAllFarm", response);
   };
@@ -91,7 +91,7 @@ export default function ChickEntryPage() {
       try {
         setLoading(true);
         
-        const farmResponse = await farmApi.getAllFarm();
+        const farmResponse = await farmApi.getAllFarm(token);
         setFarm(farmResponse.data);
 
       } catch (error) {
@@ -104,7 +104,7 @@ export default function ChickEntryPage() {
     if(token) {
       fetchData();
     }
-  }, [token, usersNo]);
+  }, [token]);
   
 
 

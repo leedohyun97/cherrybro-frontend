@@ -38,7 +38,7 @@ export default function ChickEntryDetailPage() {
         const fetchAllData = async () => {
             try {
                 const [getAllFarm, getAllFarmSection, getAllChickEntry] = await Promise.all([
-                    farmApi.getAllFarm(),
+                    farmApi.getAllFarm(token),
                     farmSectionApi.getAllFarmSection(),
                     chickEntryApi.getAllChickEntries()
                 ]);
@@ -57,7 +57,7 @@ export default function ChickEntryDetailPage() {
             }
         };
         fetchAllData();
-    },[]);
+    },[token]);
 
 
 

@@ -110,9 +110,9 @@ export default function FarmSectionPage() {
 
   /* ───────────────────── 함수 선언 ───────────────────── */
   
-  //사용자 번호로 농장 정보 가져오기
-  const getFarmByUsersNo = async (usersNo) => {
-    const response = await farmApi.getFarmByUsersNo(usersNo);
+  //토큰으로 농장 정보 가져오기
+  const getMyFarm = async (token) => {
+    const response = await farmApi.getMyFarm(token);
     setFarm(response.data);
   };
   
@@ -174,7 +174,7 @@ export default function FarmSectionPage() {
           setLoading(true);  // 로딩 시작
 
           /*** 1. Farm 가져오기 ***/
-          const farmResponse = await farmApi.getFarmByUsersNo(usersNo);
+          const farmResponse = await farmApi.getMyFarm(token);
           setFarm(farmResponse.data);
 
           /*** 2. FarmSection 가져오기 ***/
@@ -213,9 +213,9 @@ export default function FarmSectionPage() {
           setChickDeath(deathMap);
           setChickDisposal(disposalMap);
 
-          console.log('✅ chickEntry map:', entryMap);
-          console.log('✅ chickDeath map:', deathMap);
-          console.log('✅ chickDisposal map:', disposalMap);
+          console.log('chickEntry map:', entryMap);
+          console.log('chickDeath map:', deathMap);
+          console.log('chickDisposal map:', disposalMap);
 
           /*** 5. 상단 카드용 총합 계산 ***/
           /*
@@ -242,7 +242,7 @@ export default function FarmSectionPage() {
           setChickEntryListMap(entryListMap);
 
         } catch (error) {
-          console.error("❌ 데이터 로딩 실패:", error);
+          console.error("데이터 로딩 실패:", error);
         } finally {
           setLoading(false);  // 로딩 종료
         }
@@ -254,7 +254,7 @@ export default function FarmSectionPage() {
         fetchAllData();
     }
 
-}, [usersNo]);  // useEffect는 usersNo가 바뀔 때만 실행
+}, [token]);  // useEffect는 usersNo가 바뀔 때만 실행
 
 
   /* ─── 집계 데이터 계산 ─────────────────── */
@@ -310,7 +310,7 @@ export default function FarmSectionPage() {
               <th>누적 도사</th>
               <th>누적 폐사</th>
               <th>사육수수</th>
-              <th>폐사율</th>
+              <th>육성율</th>
             </tr>
           </thead>
           <tbody>
@@ -324,7 +324,7 @@ export default function FarmSectionPage() {
                 <td>{Number.isFinite(r.disposal) ? r.disposal.toLocaleString() : '0'}</td>
                 <td>{Number.isFinite(r.death) ? r.death.toLocaleString() : '0'}</td>
                 <td>{r.live !== undefined ? r.live.toLocaleString() : '0'}</td>
-                <td>{r.entry ? ((r.death / r.entry) * 100).toFixed(2) + '%' : '0%'}</td>
+                <td>{r.entry ? (((r.entry - r.death - r.disposal) / r.entry) * 100).toFixed(2) + '%' : '0%'}</td>
               </tr>
             ))}
           </tbody>

@@ -59,12 +59,32 @@ export const getFarm = async (FarmNo) => {
   }
 };
 
-//사용자 번호로 농장 조회
-export const getFarmByUsersNo = async (usersNo) => {
+//사용자 번호로 농장 조회(농장주)
+export const getMyFarm = async (token) => {
   try {
 
-    const { data } = await API.get(`/farm/${usersNo}`);
+    const { data } = await API.get(`/farm/my-farm`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log('Response:', data);
+    return data;
+  } catch (err) {
+    console.error('getFarm error:', err);
+    throw err;
+  }
+};
 
+//사용자 번호로 농장 조회(관리자)
+export const getFarmByUsersNo = async (token, usersNo) => {
+  try {
+
+    const { data } = await API.get(`/farm/${usersNo}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     console.log('Response:', data);
     return data;
   } catch (err) {
@@ -74,9 +94,13 @@ export const getFarmByUsersNo = async (usersNo) => {
 };
 
 //농장 목록 조회
-export const getAllFarm = async () => {
+export const getAllFarm = async (token) => {
   try {
-    const { data } = await API.get('/farm');
+    const { data } = await API.get('/farm/list', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
 
     console.log('Response:', data);
 

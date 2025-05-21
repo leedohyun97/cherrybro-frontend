@@ -4,6 +4,7 @@ import MainPage from './pages/MainPage';
 import UsersLoginPage from './pages/UsersLoginPage';
 import UsersRegisterPage from './pages/UsersRegisterPage';
 import UsersFindIdPage from './pages/UsersFindIdPage';
+import UsersFindIdResultPage from './pages/UsersFindIdResultPage';
 import UsersFindPasswordPage from './pages/UsersFindPasswordPage';
 import ChickEntryPage from './pages/ChickEntryPage';
 import ChickEntryDetailPage from './pages/ChickEntryDetailPage';
@@ -38,6 +39,7 @@ export default function App() {
           <Route index path="/login" element={<UsersLoginPage />} />
           <Route path="/register" element={<UsersRegisterPage />} />
           <Route path="/find-id" element={<UsersFindIdPage />} />
+          <Route path="/find-id-result" element={<UsersFindIdResultPage />} />
           <Route path="/find-password" element={<UsersFindPasswordPage />} />
         </Route>
 

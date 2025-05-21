@@ -190,3 +190,32 @@ tbody tr:hover {
     font-size: 13px;
   }
 }
+
+/* ───── 필터 영역 ───── */
+.farm-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 16px;
+}
+
+.farm-filter label {
+  font-weight: bold;
+  color: #333;
+}
+
+.farm-filter select {
+  padding: 6px 12px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  transition: border-color 0.2s ease;
+}
+
+.farm-filter select:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 3px rgba(76, 175, 80, 0.5);
+}

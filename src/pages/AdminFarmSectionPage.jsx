@@ -38,47 +38,9 @@ export default function AdminFarmSectionPage() {
   //로딩 상태
   const [loading, setLoading] = useState(true);
 
-  /* ───────────────────── 함수 선언 ───────────────────── */
-  //모든 농장 정보 가져오기
-  const getAllFarm = async () => {
-    const response = await farmApi.getAllFarm();
-    
-    console.log("getAllFarm:", response.data);
-    
-    setFarm(response.data);
-  };
-  
-  //농장 번호로 농장동 정보 가져오기
-  const getAllFarmSection = async () => {
-    const response = await farmSectionApi.getAllFarmSection();
-    console.log("getAllFarmSection response:", response.data);
-    setFarmSection(response.data);  // 농장동 배열로 설정
-  }
-  
-  //농장동 번호로 입추수수 정보 가져오기
-  const getAllChickEntries = async () => {
-    const response = await chickEntryApi.getAllChickEntries();
-    
-    // 중복된 데이터 추가 방지 (기존에 있는 farmSectionNo와 같은 항목은 추가하지 않음)
-    setChickEntry(prevEntries => {
-      const newEntries = response.data.filter(entry => 
-        !prevEntries.some(existingEntry => existingEntry.farmSectionNo === entry.farmSectionNo)
-      );
-      return [...prevEntries, ...newEntries];
-    });
-  }
-  //농장동 번호로 도태폐기 정보 가져오기
-  const getAllChickDeath = async () => {
-    const response = await chickDeathApi.getAllChickDeath();
-    
-    // 중복된 데이터 추가 방지
-    setChickDeath(prevDeaths => {
-      const newDeaths = response.data.filter(death => 
-        !prevDeaths.some(existingDeath => existingDeath.farmSectionNo === death.farmSectionNo)
-      );
-      return [...prevDeaths, ...newDeaths];
-    });
-  }
+  // 선택된 농장번호(필터링)
+  const [selectedFarmNo, setSelectedFarmNo] = useState(""); 
+
   /* 
   TotalMap 함수 설명
     list : 입추, 폐사, 도사 배열
@@ -113,7 +75,7 @@ export default function AdminFarmSectionPage() {
   useEffect(() => {
     
     if (!token) {
-      navigate("/main");  //큰 없으면 이동
+      navigate("/main");  //토큰 없으면 이동
       return;  //더 이상 실행 안 하고 종료
     }
 
@@ -122,7 +84,7 @@ export default function AdminFarmSectionPage() {
             setLoading(true);
             
             /*** 1단계: Farm 전체 가져오기 ***/
-            const farmResponse = await farmApi.getAllFarm();
+            const farmResponse = await farmApi.getAllFarm(token);
             setFarm(farmResponse.data);
             
             /*** 2단계: FarmSection 전체 가져오기 ***/
@@ -150,7 +112,7 @@ export default function AdminFarmSectionPage() {
       
       fetchAllData();
       
-    }, []); //컴포넌트 처음 마운트될 때만 실행
+    }, [token]); //컴포넌트 처음 마운트될 때만 실행
     
     
     /* ─── 농장동별 데이터 계산 ─────────────────── */
@@ -194,6 +156,7 @@ export default function AdminFarmSectionPage() {
   
       //row 데이터 반환 (항상 farmSection 기준으로 출력)
       return {
+          farmNo: section.farmNo,
           farmSectionNo: section.farmSectionNo,  // 농장동 번호
           farmName: farmInfo ? farmInfo.farmName : '농장 없음', // 농장 이름 매칭
           farmSectionName: section.farmSectionName || '',  // 농장동 이름
@@ -229,8 +192,33 @@ export default function AdminFarmSectionPage() {
         return getNumber(a.farmSectionName) - getNumber(b.farmSectionName);
     
     });
+
+    //필터링된 행만 보여주기
+    const filteredRows = rows.filter(row =>
+      selectedFarmNo === "" || row.farmNo === Number(selectedFarmNo)
+    );
+
+
     return (
       <div className="farm-page">
+
+      {/* 농장 선택 필터 */}
+      <div className="farm-filter" style={{ marginBottom: '1rem' }}>
+        <label htmlFor="farm-select">농장 선택: </label>
+        <select
+          id="farm-select"
+          value={selectedFarmNo}
+          onChange={(e) => setSelectedFarmNo(e.target.value)}
+        >
+          <option value="">전체 보기</option>
+          {farm.map(f => (
+            <option key={f.farmNo} value={f.farmNo}>
+              {f.farmName}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {/* ─── 상단 카드 3개 ─────────────────── */}
       <section className="summary-wrap">
         {[ 
@@ -259,11 +247,11 @@ export default function AdminFarmSectionPage() {
               <th>누적 도사</th>
               <th>누적 폐사</th>
               <th>현재 마릿수</th>
-              <th>폐사율</th>
+              <th>육성율</th>
             </tr>
           </thead>
           <tbody>
-            {rows.map((r, index) => (
+            {filteredRows.map((r, index) => (
               <tr key={index}>
                 <td>{r.farmName || '농장 없음'}</td>
                 <td>{r.farmSectionName || '동 없음'}</td>
@@ -273,7 +261,7 @@ export default function AdminFarmSectionPage() {
                 <td>{r.disposal !== undefined ? r.disposal.toLocaleString() : '0'}</td>
                 <td>{r.death !== undefined ? r.death.toLocaleString() : '0'}</td>
                 <td>{r.live !== undefined ? r.live.toLocaleString() : '0'}</td>
-                <td>{r.entry ? ((r.death / r.entry) * 100).toFixed(2) + '%' : '0%'}</td>
+                <td>{r.entry ? (((r.entry - r.death - r.disposal) / r.entry) * 100).toFixed(2) + '%' : '0%'}</td>
               </tr>
             ))}
           </tbody>

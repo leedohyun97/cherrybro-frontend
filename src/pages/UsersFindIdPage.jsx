@@ -32,7 +32,9 @@ export default function UsersFindIdPage() {
       switch (response.status) {
         case responseStatusCode.FIND_USER_ID_SUCCESS:
           toast.success("아이디 찾기를 성공하셨습니다.");
-          naviage('/find-id-result');
+          naviage('/find-id-result', {
+            state: { maskedId: response.data }
+          });
           break;
         case responseStatusCode.FIND_USER_ID_FAIL:
           toast.error("이름과 이메일을 확인해주세요.");
@@ -43,7 +45,7 @@ export default function UsersFindIdPage() {
       }
     } catch (error) {
       console.error("Error finding ID:", error);
-      alert("서버와의 연결에 실패했습니다.");
+      toast.error("서버와의 연결에 실패했습니다.");
     }
   }
 

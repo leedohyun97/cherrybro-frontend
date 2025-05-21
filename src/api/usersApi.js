@@ -107,10 +107,10 @@ export const checkUserIdDuplicate = async (usersId) => {
 };
 
 //사용자 아이디 찾기
-export const findUserIdByUsersNameAndUsersEmail = async (usersName, usersEmail) => {
+export const findUserIdByUsersNameAndUsersEmail = async (findIdDto) => {
   try {
 
-    const { data } = await API.get(`/users/find-id?usersName=${usersName}&usersEmail=${usersEmail}`);
+    const { data } = await API.post(`/users/find-id`, findIdDto);
 
     console.log('Response:', data);
 

@@ -26,6 +26,8 @@ export default function AdminFarmSectionPage() {
   //농장동 데이터를 배열로 초기화
   const [farmSection, setFarmSection] = useState([]);
 
+  const [currentPage, setCurrentPage] = useState(0);
+
   //입추 수 데이터를 배열로 초기화
   const [chickEntry, setChickEntry] = useState([]);
 
@@ -39,7 +41,13 @@ export default function AdminFarmSectionPage() {
   const [loading, setLoading] = useState(true);
 
   // 선택된 농장번호(필터링)
-  const [selectedFarmNo, setSelectedFarmNo] = useState(""); 
+  const [selectedFarmNo, setSelectedFarmNo] = useState(''); 
+
+  //현재 선택된 농장이 있는지 확인 (필터링 중인지 여부)
+  const isFiltering = selectedFarmNo !== "";
+  
+  //기본 페이지 사이즈
+  const PAGE_SIZE = 10;
 
   /* 
   TotalMap 함수 설명
@@ -72,48 +80,52 @@ export default function AdminFarmSectionPage() {
   };
 
   
-  useEffect(() => {
-    
-    if (!token) {
-      navigate("/main");  //토큰 없으면 이동
-      return;  //더 이상 실행 안 하고 종료
+  const fetchFarmSections = async () => {
+    // selectedFarmNo 가 있으면 그 농장만, 없으면 전체
+    return selectedFarmNo
+      ? farmSectionApi.getAllFarmSectionByFarmNo(selectedFarmNo)
+      : farmSectionApi.getAllFarmSection();
+  };
+
+  
+useEffect(() => {
+  if (!token) {
+    navigate("/main");
+    return;
+  }
+
+  //선택 농장이 바뀌면 페이지는 1페이지로 초기화
+  setCurrentPage(0);
+
+  const fetchAllData = async () => {
+    try {
+      setLoading(true);
+
+      const farmResponse = await farmApi.getAllFarm(token);
+      setFarm(farmResponse.data);
+
+      const farmSectionResponse = selectedFarmNo ? await farmSectionApi.getAllFarmSectionByFarmNo(selectedFarmNo) : await farmSectionApi.getAllFarmSection()
+      setFarmSection(farmSectionResponse.data);
+
+      const entryResult = await chickEntryApi.getAllChickEntries();
+      setChickEntry(entryResult.data);
+
+      const deathResult = await chickDeathApi.getAllChickDeath();
+      setChickDeath(deathResult.data);
+
+      const disposalResult = await chickDisposalApi.getAllChickDisposal();
+      setChickDisposal(disposalResult.data);
+
+    } catch (error) {
+      console.error("데이터 로딩 실패:", error);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const fetchAllData = async () => {
-      try {
-            setLoading(true);
-            
-            /*** 1단계: Farm 전체 가져오기 ***/
-            const farmResponse = await farmApi.getAllFarm(token);
-            setFarm(farmResponse.data);
-            
-            /*** 2단계: FarmSection 전체 가져오기 ***/
-            const sectionResponse = await farmSectionApi.getAllFarmSection();
-            setFarmSection(sectionResponse.data);
-            
-            /*** 3단계: Entry 전체 가져오기 ***/
-            const entryResult = await chickEntryApi.getAllChickEntries();
-            setChickEntry(entryResult.data);
-            
-            /*** 4단계: Death 전체 가져오기 ***/
-            const deathResult = await chickDeathApi.getAllChickDeath();
-            setChickDeath(deathResult.data);
+  fetchAllData();
+}, [token, selectedFarmNo]); // selectedFarmNo도 감지
 
-            /*** 5단계: Disposal 전체 가져오기 ***/
-            const disposalResult = await chickDisposalApi.getAllChickDisposal();
-            setChickDisposal(disposalResult.data);
-            
-          } catch (error) {
-            console.error("데이터 로딩 실패:", error);
-          } finally {
-            setLoading(false);
-        }
-      };
-      
-      fetchAllData();
-      
-    }, [token]); //컴포넌트 처음 마운트될 때만 실행
-    
     
     /* ─── 농장동별 데이터 계산 ─────────────────── */
     const entryMap = TotalMap(chickEntry, 'farmSectionNo', 'chickEntryNumber');
@@ -193,9 +205,11 @@ export default function AdminFarmSectionPage() {
     
     });
 
-    //필터링된 행만 보여주기
-    const filteredRows = rows.filter(row =>
-      selectedFarmNo === "" || row.farmNo === Number(selectedFarmNo)
+    const totalPage = Math.ceil(rows.length / PAGE_SIZE);
+
+    const paginatedRows = rows.slice(
+      currentPage * PAGE_SIZE,
+      (currentPage + 1) * PAGE_SIZE
     );
 
 
@@ -251,7 +265,7 @@ export default function AdminFarmSectionPage() {
             </tr>
           </thead>
           <tbody>
-            {filteredRows.map((r, index) => (
+            {paginatedRows.map((r, index) => (
               <tr key={index}>
                 <td>{r.farmName || '농장 없음'}</td>
                 <td>{r.farmSectionName || '동 없음'}</td>
@@ -267,6 +281,23 @@ export default function AdminFarmSectionPage() {
           </tbody>
         </table>
       </div>
+
+      {/* 페이지네이션 */}
+      {totalPage > 1 && (
+      <div className="pagination">
+        {[...Array(totalPage)].map((_, page) => (
+          <button
+            key={page}
+            onClick={() => setCurrentPage(page)}
+            className={page === currentPage ? 'active-page' : ''}
+          >
+            {page + 1}
+          </button>
+        ))}
+      </div>
+    )}
+
+
     </div>
   );
 }

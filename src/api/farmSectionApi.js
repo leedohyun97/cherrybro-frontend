@@ -88,3 +88,17 @@ export const getAllFarmSectionByFarmNo = async (FarmNo) => {
     throw err;
   }
 };
+
+//농장동 목록(페이징) 조회
+export const getFarmSectionPage = async (page, size = 10) => {
+  try {
+
+    const { data } = await API.get(`/farmSection/list/page?page=${page}&size=${size}`);
+
+    console.log('Response:', data);
+    return data;
+  } catch (err) {
+    console.error('getAllFarmSectionByFarmNo error:', err);
+    throw err;
+  }
+};

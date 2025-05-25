@@ -238,3 +238,8 @@ tbody tr:hover {
   background-color: #007bff;
   color: white;
 }
+
+.del-btn {
+  border: 0;
+  background-color: transparent;
+}

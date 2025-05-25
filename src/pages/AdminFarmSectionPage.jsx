@@ -26,6 +26,7 @@ export default function AdminFarmSectionPage() {
   //농장동 데이터를 배열로 초기화
   const [farmSection, setFarmSection] = useState([]);
 
+  //현재 보고 있는 페이지 번호, 몇 번째 페이지를 보여줄지를 이 값으로 제어
   const [currentPage, setCurrentPage] = useState(0);
 
   //입추 수 데이터를 배열로 초기화
@@ -43,9 +44,6 @@ export default function AdminFarmSectionPage() {
   // 선택된 농장번호(필터링)
   const [selectedFarmNo, setSelectedFarmNo] = useState(''); 
 
-  //현재 선택된 농장이 있는지 확인 (필터링 중인지 여부)
-  const isFiltering = selectedFarmNo !== "";
-  
   //기본 페이지 사이즈
   const PAGE_SIZE = 10;
 
@@ -87,53 +85,65 @@ export default function AdminFarmSectionPage() {
       : farmSectionApi.getAllFarmSection();
   };
 
-  
-useEffect(() => {
-  if (!token) {
-    navigate("/main");
-    return;
-  }
+  //토큰이 들어오거나, 번호를 선택했을 때 실행
+  useEffect(() => {
 
-  //선택 농장이 바뀌면 페이지는 1페이지로 초기화
-  setCurrentPage(0);
-
-  const fetchAllData = async () => {
-    try {
-      setLoading(true);
-
-      const farmResponse = await farmApi.getAllFarm(token);
-      setFarm(farmResponse.data);
-
-      const farmSectionResponse = selectedFarmNo ? await farmSectionApi.getAllFarmSectionByFarmNo(selectedFarmNo) : await farmSectionApi.getAllFarmSection()
-      setFarmSection(farmSectionResponse.data);
-
-      const entryResult = await chickEntryApi.getAllChickEntries();
-      setChickEntry(entryResult.data);
-
-      const deathResult = await chickDeathApi.getAllChickDeath();
-      setChickDeath(deathResult.data);
-
-      const disposalResult = await chickDisposalApi.getAllChickDisposal();
-      setChickDisposal(disposalResult.data);
-
-    } catch (error) {
-      console.error("데이터 로딩 실패:", error);
-    } finally {
-      setLoading(false);
+    //토큰이 없으면 메인으로 이동
+    if (!token) {
+      navigate("/main");
+      return;
     }
-  };
 
-  fetchAllData();
-}, [token, selectedFarmNo]); // selectedFarmNo도 감지
+    //선택 농장이 바뀌면 페이지는 1페이지로 초기화
+    setCurrentPage(0);
+
+    //데이터를 가져옴
+    const fetchAllData = async () => {
+      try {
+        setLoading(true);
+
+        //모든 농장 데이터 가져오기
+        const farmResponse = await farmApi.getAllFarm(token);
+        setFarm(farmResponse.data);
+
+        //농장 선택 시에는 선택한 농장동만 가져오기, 아닐 시 모든 농장동 데이터 가져오기
+        const farmSectionResponse = selectedFarmNo ? await farmSectionApi.getAllFarmSectionByFarmNo(selectedFarmNo) : await farmSectionApi.getAllFarmSection()
+        setFarmSection(farmSectionResponse.data);
+
+        //모든 입추 내역 가져오기
+        const entryResult = await chickEntryApi.getAllChickEntries();
+        setChickEntry(entryResult.data);
+
+        //모든 폐사 내역 가져오기
+        const deathResult = await chickDeathApi.getAllChickDeath();
+        setChickDeath(deathResult.data);
+
+        //모든 도사 내역 가져오기
+        const disposalResult = await chickDisposalApi.getAllChickDisposal();
+        setChickDisposal(disposalResult.data);
+
+      } catch (error) {
+        console.error("데이터 로딩 실패:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    //데이터 가져오기
+    fetchAllData();
+  }, [token, selectedFarmNo]); // token, selectedFarmNo 감지
 
     
     /* ─── 농장동별 데이터 계산 ─────────────────── */
+    //입추 내역에서 farmSectionNo 별로 chickEntryNumber 가져와 Map형태로 저장(키, 밸류)
     const entryMap = TotalMap(chickEntry, 'farmSectionNo', 'chickEntryNumber');
     const deathMap = TotalMap(chickDeath, 'farmSectionNo', 'chickDeathNumber');
     const disposalMap = TotalMap(chickDisposal, 'farmSectionNo', 'chickDisposalNumber');
+    /* ─── 농장동별 데이터 계산 ─────────────────── */
     
     
     /* ─── 집계 데이터 계산 ─────────────────── */
+    //Map의 value를 배열로 변환, sum(누적값), v(현재값), 0(초기값) 배열의 모든 값을 순회하며 누적합 계산.
     const totalEntry = [...entryMap.values()].reduce((sum, v) => sum + v, 0);
     const totalDeath = [...deathMap.values()].reduce((sum, v) => sum + v, 0);
     const totalDisposal = [...disposalMap.values()].reduce((sum, v) => sum + v, 0);
@@ -142,28 +152,27 @@ useEffect(() => {
     /* ───────────────────── rows 생성 ───────────────────── */
     //farmSection(농장동) 기준으로 rows를 생성
     const rows = farmSection.map((section) => {
-  
+      
+      //map에서 key값을 통해 value를 가져옴
       const entry = entryMap.get(section.farmSectionNo) || 0; //입추 수
       const death = deathMap.get(section.farmSectionNo) || 0; //도태 폐사 수
       const disposal = disposalMap.get(section.farmSectionNo) || 0; //도태 수
   
-      /*—————————— 일령 계산 ——————————*/
-      // 입추 날짜 (시간 제거)
+      /*—————————— 일령 계산 Start ——————————*/
+      //입추 날짜 (시간 제거)
       const entries = chickEntry.filter(e => e.farmSectionNo === section.farmSectionNo);
       const lastEntryDate = entries.map(e => new Date(e.chickEntryDate)).sort((a, b) => b - a)[0] || null;
-
+      
       //오늘 날짜 (시간 제거)
       const today = new Date(); 
       today.setHours(0, 0, 0, 0);  //시간을 00:00:00으로 맞춤
       if (lastEntryDate) lastEntryDate.setHours(0, 0, 0, 0);
   
-      // 일령 계산
+      //일령 계산
       const age = lastEntryDate ? Math.floor((today - lastEntryDate) / (1000 * 60 * 60 * 24)) + 1 : null;
-
-
-      /*—————————— 일령 계산 ——————————*/
-  
-      //farmSection의 farmNo로 farmName 찾아오기
+      /*—————————— 일령 계산 End ——————————*/
+      
+      //현재 농장동(section)의 farmNo와 전체 농장 리스트(farm) 중 farmNo가 같은 해당 농장 객체를 찾아 반환
       const farmInfo = farm.find(f => f.farmNo === section.farmNo);
   
       //row 데이터 반환 (항상 farmSection 기준으로 출력)
@@ -183,16 +192,16 @@ useEffect(() => {
     })// rows 배열을 정렬한다
     .sort((a, b) => {
     
-        // 1. 농장 이름(farmName) 비교 → 알파벳 순으로 정렬
-        if (a.farmName < b.farmName) 
-            return -1; // a 농장이 b 농장보다 이름이 앞이면 a를 앞으로
+        /*————— 농장 이름을 한글 사전 순서로 정렬 start —————*/
+        //한글을 기준으로 문자 비교(-1 : a.farmName이 먼저, 0 : 같다, 1 : b.farmName이 먼저)
+        const nameCompare = a.farmName.localeCompare(b.farmName, 'ko');
+        //농장 이름이 서로 다르면 비교 결과를 저장해 정렬 순서 결정
+        if (nameCompare !== 0) return nameCompare;
+        /*————— 농장 이름을 한글 사전 순서로 정렬 end —————*/
+
     
-        if (a.farmName > b.farmName) 
-            return 1;  // a 농장이 b 농장보다 이름이 뒤면 b를 앞으로
-    
-        // 2. 농장 이름이 같을 경우 → 농장동 이름에서 숫자 추출해서 비교
-    
-        // farmSectionName(예: '1동', '3동')에서 숫자만 추출하는 함수
+        /*————— 농장 이름이 같을 경우 → 농장동 이름에서 숫자 추출해서 비교 —————*/
+        // farmSectionName(예: '1동', '2동')에서 숫자만 추출하는 함수
         const getNumber = (name) => 
             parseInt(                             // 문자열을 숫자로 바꿈
                 name.replace(/[^0-9]/g, ''),     // 숫자가 아닌 모든 문자 제거 (예: '강남1동' → '1')
@@ -205,10 +214,14 @@ useEffect(() => {
     
     });
 
+    //총 페이지 계산, rows.length: 전체 항목 수, PAGE_SIZE: 보여줄 항목 수, Math.ceil(올림)
     const totalPage = Math.ceil(rows.length / PAGE_SIZE);
 
+    //전체 농장동 데이터 배열(ROW)에서 시작(0)부터 끝-1(10-1 => 9)까지 잘라서 새 배열 제작
     const paginatedRows = rows.slice(
+      //현재 페이지 번호(currentPage(0)) * 보여줄 항목 수(PAGE_SIZE(10)) => r[0]
       currentPage * PAGE_SIZE,
+      //현재 페이지 번호(currentPage(0+1))* 보여줄 항목 수(PAGE_SIZE(10)) => r[10]
       (currentPage + 1) * PAGE_SIZE
     );
 
@@ -225,6 +238,7 @@ useEffect(() => {
           onChange={(e) => setSelectedFarmNo(e.target.value)}
         >
           <option value="">전체 보기</option>
+          {/* 농장 배열의 이름 전체 출력, key=농장번호 value=농장번호 */}
           {farm.map(f => (
             <option key={f.farmNo} value={f.farmNo}>
               {f.farmName}
@@ -233,7 +247,7 @@ useEffect(() => {
         </select>
       </div>
 
-      {/* ─── 상단 카드 3개 ─────────────────── */}
+      {/* ─── 상단 카드 4개 ─────────────────── */}
       <section className="summary-wrap">
         {[ 
           { label: '입추 수', value: totalEntry.toLocaleString() },

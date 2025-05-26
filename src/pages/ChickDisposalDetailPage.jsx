@@ -5,6 +5,8 @@ import { useUsersAuth } from '../util/authContext';
 import * as farmApi from '../api/farmApi';
 import * as farmSectionApi from '../api/farmSectionApi';
 import * as chickDisposalApi from '../api/chickDisposalApi';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { toast } from 'react-toastify';
 
 export default function ChickDisposalDetailPage() {
@@ -84,9 +86,9 @@ export default function ChickDisposalDetailPage() {
             <tr>
                 <th>농장</th>
                 <th>동</th>
-                <th>입추일</th>
-                <th>입추 등록일</th>
-                <th>수량</th>
+                <th>도사일</th>
+                <th>도사 등록일</th>
+                <th>도사 수</th>
             <th/>
           </tr>
         </thead>
@@ -105,7 +107,7 @@ export default function ChickDisposalDetailPage() {
                 <td>{disposal.chickDisposalNumber?.toLocaleString()}</td>
                 <td className="right">
                   <button className="del-btn" onClick={() => deleteAction(disposal.chickDisposalNo)}>
-                    삭제
+                   <FontAwesomeIcon icon={faTrash} className="icon" />
                   </button>
                 </td>
               </tr>

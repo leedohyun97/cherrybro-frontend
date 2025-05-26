@@ -95,6 +95,23 @@ export const getAllChickEntries = async () => {
   }
 };
 
+
+//농장 번호로 입추 목록 조회(관리자)
+export const getChickEntriesByFarmNo = async (farmNo) => {
+  try {
+
+    const { data } = await API.get(`/chickEntry/list/detail?farmNo=${farmNo}`);
+    console.log('Response:', data);
+
+    return data;
+
+  } catch (err) {
+    console.error('getChickEntriesByFarmNo error:', err);
+
+    throw err;
+  }
+};
+
 //농장동 입추 수 누적합 조회
 export const getTotalChickEntryNumberByFarmSectionNo = async (farmSectionNo) => {
   try {

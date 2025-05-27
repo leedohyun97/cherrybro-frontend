@@ -10,35 +10,54 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
 
 export default function ChickDeathDetailPage() {
-  const navigate = useNavigate(); // useNavigate 훅을 사용하여 페이지 이동
+  //useNavigate 훅을 사용하여 페이지 이동
+  const navigate = useNavigate();
 
-  const { token, users } = useUsersAuth(); // 사용자 인증 정보를 가져온다
-  const usersNo = users?.usersNo || null; //사용자 번호를 가져온다
-  console.log("users : ", users);
-  console.log("usersNo : ", usersNo);
+  //사용자 인증 정보를 가져온다
+  const { token, users } = useUsersAuth();
 
-  const [farm, setFarm] = useState(null); // 농장 정보를 저장할 배열열
+  //사용자 번호를 가져온다
+  const usersNo = users?.usersNo || null;
 
-  const [farmSections, setFarmSections] = useState([]); // 농장 구역 정보를 저장할 배열
+  //농장 정보를 저장할 배열
+  const [farm, setFarm] = useState({});
 
-  const [chickDeaths, setChickDeaths] = useState([]); // 병아리 입고 정보를 저장할 배열
+  //농장 구역 정보를 저장할 배열
+  const [farmSections, setFarmSections] = useState([]);
 
-  const [loading, setLoading] = useState(true); // 로딩 상태를 저장할 변수
+  //병아리 입고 정보를 저장할 배열
+  const [chickDeaths, setChickDeaths] = useState([]);
 
+  //필터링 시 선택한 농장동 번호
+  const [selectedFarmSectionNo, setSelectedFarmSectionNo] = useState(null);
+
+  //필터링 시 선택한 농장 번호
+  const [currentPage, setCurrentPage] = useState(0);
+
+  //기본 페이지 사이즈
+  const PAGE_SIZE = 10;
+
+  //로딩 상태를 저장할 변수
+  const [loading, setLoading] = useState(true);
+
+  //삭제 API 호출
   const deleteAction = async (chickDeathNo) => {
     if (window.confirm("폐사 내역을 삭제하시겠습니까?")) {
       try {
-        await chickDeathApi.deleteChickDeath(chickDeathNo); // 병아리 입고 정보 삭제 API 호출
+        await chickDeathApi.deleteChickDeath(chickDeathNo); //병아리 입고 정보 삭제 API 호출
         toast.success("삭제되었습니다.");
-        navigate("/farm-section"); // 삭제 후 병아리 입고 목록 페이지로 이동
+        navigate("/farm-section"); //삭제 후 병아리 입고 목록 페이지로 이동
       } catch (error) {
-        console.error("Error deleting chick entry:", error); // 에러를 콘솔에 출력한다
+        console.error("Error deleting chick entry:", error); //에러를 콘솔에 출력한다
       }
     }
   };
 
   useEffect(() => {
-    if (!usersNo) return; // usersNo가 아직 준비 안 됐으면 실행 안 함
+    if (!token) return; // token 아직 준비 안 됐으면 실행 안 함
+
+    setCurrentPage(0); // 선택 농장이 바뀌면 페이지는 1페이지로 초기화
+
     const fetchAllData = async () => {
       try {
         const getMyFarm = await farmApi.getMyFarm(token); // 토큰으로 농장 정보 조회
@@ -49,16 +68,16 @@ export default function ChickDeathDetailPage() {
           await farmSectionApi.getAllFarmSectionByFarmNo(getMyFarmData.farmNo); // 농장 번호로 농장 구역 정보 조회
         const getAllFarmSectionByFarmNoData = getAllFarmSectionByFarmNo.data; // 농장 구역 정보
         setFarmSections(getAllFarmSectionByFarmNoData); // 농장 구역 정보를 상태에 저장
-        console.log(
-          "getAllFarmSectionByFarmNoData",
-          getAllFarmSectionByFarmNoData
-        );
 
-        const chickDeathResponse = getAllFarmSectionByFarmNoData.map(
-          (section) =>
+        const selectedFarmSection = selectedFarmSectionNo
+          ? [selectedFarmSectionNo]
+          : getAllFarmSectionByFarmNoData.map((s) => s.farmSectionNo);
+
+        const chickDeathResponse = selectedFarmSection.map(
+          (sectionNo) =>
             chickDeathApi
-              .getChickDeathByFarmSectionNo(section.farmSectionNo)
-              .then((response) => response.data) // 농장 구역 번호로 병아리 입고 정보 조회
+              .getChickDeathByFarmSectionNo(sectionNo)
+              .then((response) => response.data) // 농장 구역 번호로 병아리 폐사 정보 조회
         );
 
         const chickDeathResult = await Promise.all(chickDeathResponse); // 모든 API 호출이 완료될 때까지 대기
@@ -78,14 +97,41 @@ export default function ChickDeathDetailPage() {
         setLoading(false); // 로딩 상태를 false로 변경
       }
     };
-
     fetchAllData();
-  }, [usersNo]);
+  }, [token, selectedFarmSectionNo]);
 
+  const handleChangeFarmSectionNo = (e) => {
+    const value = e.target.value;
+    setSelectedFarmSectionNo(value);
+  };
+
+  const totalPage = Math.ceil(chickDeaths.length / PAGE_SIZE);
+
+  const paginatedRows = chickDeaths.slice(
+    currentPage * PAGE_SIZE,
+    (currentPage + 1) * PAGE_SIZE
+  );
   return (
     <div className="admin-page">
       <h2>전체 폐사 내역</h2>
 
+      {/* 농장동 선택 필터 */}
+      <div className="farm-filter">
+        <label htmlFor="farm-select">농장동 선택: </label>
+        <select
+          id="farm-select"
+          value={selectedFarmSectionNo}
+          onChange={handleChangeFarmSectionNo}
+        >
+          <option value={""}>전체 보기</option>
+          {farmSections.map((f) => (
+            <option key={f.farmSectionNo} value={f.farmSectionNo}>
+              {f.farmSectionName}
+            </option>
+          ))}
+          ;
+        </select>
+      </div>
       <table className="admin-table">
         <thead>
           <tr>
@@ -99,7 +145,7 @@ export default function ChickDeathDetailPage() {
         </thead>
 
         <tbody>
-          {chickDeaths.map((death) => {
+          {paginatedRows.map((death) => {
             /* 1) 동 찾기: farmSection 배열에서 번호 일치하는 객체 찾기 */
             const findSection =
               farmSections.find(
@@ -130,6 +176,21 @@ export default function ChickDeathDetailPage() {
           })}
         </tbody>
       </table>
+
+      {/* 페이지네이션 */}
+      {totalPage > 1 && (
+        <div className="pagination">
+          {[...Array(totalPage)].map((_, page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={page === currentPage ? "active-page" : ""}
+            >
+              {page + 1}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -100,6 +100,11 @@ td {
   text-align: center;
 }
 
+.red {
+  color: red;
+  font-weight: bold;
+}
+
 thead th {
   background: #f7f7f7;
   border-bottom: 2px solid #e0e0e0;

@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainPage from "./pages/MainPage";
+import TestMainPage from "./pages/TestMainPage";
 import UsersLoginPage from "./pages/UsersLoginPage";
 import UsersRegisterPage from "./pages/UsersRegisterPage";
 import UsersFindIdPage from "./pages/UsersFindIdPage";
@@ -11,7 +12,7 @@ import ChickEntryPage from "./pages/ChickEntryPage";
 import ChickEntryDetailPage from "./pages/ChickEntryDetailPage";
 import ChickDeathPage from "./pages/ChickDeathPage";
 import ChickDeathDetailPage from "./pages/ChickDeathDetailPage";
-import ChickDisposalPage from "./pages/ChickDisposalPage";
+import ChickReducePage from "./pages/ChickReducePage";
 import ChickDisposalDetailPage from "./pages/ChickDisposalDetailPage";
 import FarmSectionPage from "./pages/FarmSectionPage";
 import AdminFarmSectionPage from "./pages/AdminFarmSectionPage";
@@ -42,11 +43,12 @@ export default function App() {
             <Route path="/find-id" element={<UsersFindIdPage />} />
             <Route path="/find-id-result" element={<UsersFindIdResultPage />} />
             <Route path="/find-password" element={<UsersFindPasswordPage />} />
+            <Route path="/" element={<TestMainPage />} />
+            <Route path="/test-main" element={<TestMainPage />} />
           </Route>
 
           {/* ---------- MainLayout : 헤더/사이드바 있음 ---------- */}
           <Route element={<MainLayout />}>
-            <Route path="/" element={<MainPage />} />
             <Route path="/main" element={<MainPage />} />
             <Route path="/farm-section" element={<FarmSectionPage />} />
             <Route
@@ -70,7 +72,7 @@ export default function App() {
               element={<ChickDeathDetailPage />}
             />
 
-            <Route path="/chick-disposal" element={<ChickDisposalPage />} />
+            <Route path="/chick-reduce" element={<ChickReducePage />} />
             <Route
               path="/chick-disposal/detail"
               element={<ChickDisposalDetailPage />}

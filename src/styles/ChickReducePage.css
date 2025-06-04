@@ -1,0 +1,187 @@
+/* 전체 레이아웃 */
+.page-wrapper {
+  padding: 30px;
+  min-height: 100vh;
+  font-family: "Pretendard", sans-serif;
+}
+
+/* 제목 */
+.form-title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+/* 입력 폼 */
+.form-vertical {
+  padding: 30px;
+  border-radius: 16px;
+}
+
+/* 라벨 정렬 */
+.form-vertical label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+  font-size: 18px;
+  text-align: center;
+}
+
+/* 공통 input/select */
+.form-vertical input,
+.form-vertical select {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #333;
+  box-sizing: border-box;
+  transition: 0.3s;
+  background-color: #fff;
+  text-align: center;
+}
+
+.form-vertical input:focus,
+.form-vertical select:focus {
+  border-color: #005f99;
+  background-color: #fff;
+  outline: none;
+}
+
+/* 날짜 */
+input[type="date"] {
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 16px;
+}
+
+/* 설명 텍스트 */
+.desc {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* 버튼 */
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #005f99;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.submit-button:hover {
+  background-color: #00487a;
+}
+
+/* 농장 구역 선택 */
+.grid-sections {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.section-box {
+  padding: 10px 20px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.section-box:hover {
+  background-color: #eef7ff;
+}
+
+.section-box.selected {
+  background-color: #cceeff;
+  border-color: #005f99;
+  font-weight: bold;
+}
+
+.number-input {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.number-field {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+}
+.number-field label {
+  font-size: 16px;
+  white-space: nowrap;
+  height: 44px; /* input 높이에 맞춤 */
+  display: flex;
+  align-items: center; /* 텍스트 수직 가운데 정렬 */
+}
+
+.number-field input {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+/* 에러 메시지 */
+.input-error {
+  border-color: red !important;
+}
+
+.error-message {
+  color: red;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* 로딩 */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #ccc;
+  border-top: 6px solid #005f99;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

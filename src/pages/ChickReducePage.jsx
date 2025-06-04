@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../styles/ChickDeathDisposalPage.css";
+import "../styles/ChickReducePage.css";
 import * as farmApi from "../api/farmApi";
 import * as farmSectionApi from "../api/farmSectionApi";
 import * as chickDisposalApi from "../api/chickDisposalApi";

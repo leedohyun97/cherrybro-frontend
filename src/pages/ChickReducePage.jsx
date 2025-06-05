@@ -7,6 +7,7 @@ import * as chickDeathApi from "../api/chickDeathApi";
 import * as responseStatus from "../api/responseStatusCode";
 import { useUsersAuth } from "../util/authContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 /* 도태/폐사 입력 페이지 */
 export default function ChickReducePage() {
@@ -20,6 +21,8 @@ export default function ChickReducePage() {
   const [farm, setFarm] = useState({ farmNo: "", farmName: "", userNo: "" }); //농장
   const [farmSectionList, setFarmSectionList] = useState([]); //농장동 리스트(배열)
   const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD, 오늘 날짜(기본값)
+
+  const [loading, setLoading] = useState(false);
 
   /* 도태/폐사 입력 선언 */
   const [input, setInput] = useState({
@@ -65,40 +68,83 @@ export default function ChickReducePage() {
 
   //Submit 버튼 클릭 시 데이터 전송
   const handleSubmit = async () => {
+    //두 번 클릭 방지
+    if (loading) return;
+
+    setLoading(true);
+
     try {
+      //병렬 호출을 위한 promiss 선언(배열)
+      const promise = [];
+
+      //chickDisposalNumber가 입력되었다면
       if (input.chickDisposalNumber) {
-        const res1 = await chickDisposalApi.createChickDisposal({
-          chickDisposalNumber: input.chickDisposalNumber,
-          chickDisposalDate: input.date,
-          farmSectionNo: input.farmSectionNo,
-        });
-        if (res1.status !== responseStatus.CREATED_CHICK_DISPOSAL_SUCCESS)
-          throw new Error("도사 등록 실패");
-      }
-      //DeathNumber가 있으면
-      if (input.chickDeathNumber) {
-        //
-        const res2 = await chickDeathApi.createChickDeath({
-          chickDeathNumber: input.chickDeathNumber,
-          chickDeathDate: input.date,
-          farmSectionNo: input.farmSectionNo,
-        });
-        if (res2.status !== responseStatus.CREATED_CHICK_DEATH_SUCCESS)
-          throw new Error("폐사 등록 실패");
+        //배열에 API 담기
+        promise.push(
+          //도사 입력 API 호출
+          chickDisposalApi.createChickDisposal({
+            chickDisposalNumber: input.chickDisposalNumber,
+            chickDisposalDate: input.date,
+            farmSectionNo: input.farmSectionNo,
+          })
+        );
       }
 
-      alert("성공적으로 입력되었습니다.");
+      //DeathNumber가 입력되었다면
+      if (input.chickDeathNumber) {
+        //배열에 API 담기
+        promise.push(
+          //폐사 입력 API 호출
+          chickDeathApi.createChickDeath({
+            chickDeathNumber: input.chickDeathNumber,
+            chickDeathDate: input.date,
+            farmSectionNo: input.farmSectionNo,
+          })
+        );
+      }
+
+      //promiss 배열에 아무것도 안담겼다면
+      if (promise.length === 0) {
+        //에러 메시지 호출
+        toast.warn("도태/폐사를 하나 이상 입력해주세요.");
+        return;
+      }
+
+      //배열 병렬 실행
+      const results = await Promise.all(promise);
+
+      //결과를 response로 변수로 만들어 배열 수 만큼 반복
+      for (const response of results) {
+        const successCodes = [
+          responseStatus.CREATED_CHICK_DISPOSAL_SUCCESS,
+          responseStatus.CREATED_CHICK_DEATH_SUCCESS,
+        ];
+        if (!successCodes.includes(response.status)) {
+          throw new Error("다시 시도해주세요.");
+        }
+      }
+      toast.success("도태/폐사가 입력되었습니다.");
       navigate("/farm-section");
     } catch (err) {
       console.error(err);
-      alert("입력 중 오류가 발생했습니다.");
+      toast.error("입력 중 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="loading-overlay">
+        <div className="loading-spinner"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="page-wrapper">
       <div className="form-container">
-        <h2 className="form-title">도사 / 폐사 수 등록</h2>
+        <h2 className="form-title">도태 / 폐사 등록</h2>
 
         <form className="form-vertical">
           <div className="form-row-horizontal">
@@ -137,7 +183,9 @@ export default function ChickReducePage() {
               <input
                 id="chickDisposalNumber"
                 type="number"
+                min={0}
                 name="chickDisposalNumber"
+                value={input.chickDisposalNumber}
                 placeholder="예: 200"
                 onChange={handleChange}
               />
@@ -148,7 +196,9 @@ export default function ChickReducePage() {
               <input
                 id="chickDeathNumber"
                 type="number"
+                min={0}
                 name="chickDeathNumber"
+                value={input.chickDeathNumber}
                 placeholder="예: 200"
                 onChange={handleChange}
               />

@@ -24,13 +24,6 @@ export default function MainPage() {
           >
             회원가입
           </button>
-
-          <button
-            onClick={() => navigate("/main")}
-            className="font-noto font-semibold bg-white border border-gray-300 text-gray-800 px-5 py-1 rounded-lg font-semibold hover:bg-yellow-400 hover:text-white transition duration-300"
-          >
-            콘솔
-          </button>
         </div>
       </header>
 

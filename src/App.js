@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainPage from "./pages/MainPage";
-import TestMainPage from "./pages/TestMainPage";
 import UsersLoginPage from "./pages/UsersLoginPage";
 import UsersRegisterPage from "./pages/UsersRegisterPage";
 import UsersFindIdPage from "./pages/UsersFindIdPage";
@@ -43,13 +42,12 @@ export default function App() {
             <Route path="/find-id" element={<UsersFindIdPage />} />
             <Route path="/find-id-result" element={<UsersFindIdResultPage />} />
             <Route path="/find-password" element={<UsersFindPasswordPage />} />
-            <Route path="/" element={<TestMainPage />} />
-            <Route path="/test-main" element={<TestMainPage />} />
+            <Route path="/" element={<MainPage />} />
+            <Route path="/main" element={<MainPage />} />
           </Route>
 
           {/* ---------- MainLayout : 헤더/사이드바 있음 ---------- */}
           <Route element={<MainLayout />}>
-            <Route path="/main" element={<MainPage />} />
             <Route path="/farm-section" element={<FarmSectionPage />} />
             <Route
               path="/admin-farm-section"
